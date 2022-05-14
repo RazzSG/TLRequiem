@@ -91,6 +91,9 @@ export class ItemLoader {
         item.Item = {};
         const itemName = item.constructor.name;
         item.Type = item.Item.type = item.Item.netID = tl.item.registerNew(itemName);
+        
+        const requiemCategory = tl.cheatMenu.addItemCategory('Requiem', 'Textures/CheatMenuCategory.webp');
+        tl.cheatMenu.addItemToCategory(requiemCategory, item.Type);
 
         const newItemNameTranslationIndex = Terraria.Lang._itemNameCache.length;
         Terraria.Lang._itemNameCache = Terraria.Lang._itemNameCache.cloneResized(newItemNameTranslationIndex + 1);

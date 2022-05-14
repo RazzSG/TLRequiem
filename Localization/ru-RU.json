@@ -1,9 +1,9 @@
 ﻿{
     "ItemName": {
-        
+        "VialOfGraveEarth": "Сосуд с могильной землёй"
     },
     
     "ItemTooltip": {
-        
+        "VialOfGraveEarth": "Находясь под землёй, увеличивает скорость добычи на 15%"
     }
 }

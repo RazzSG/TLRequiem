@@ -37,7 +37,15 @@ export const Terraria = {
         ItemSorting: new NativeClass("Terraria.UI", "ItemSorting")
     },
     GameContent: {
-        TextureAssets: new NativeClass('Terraria.GameContent', 'TextureAssets')
+        TextureAssets: new NativeClass('Terraria.GameContent', 'TextureAssets'),
+        ItemDropRules: {
+            ItemDropRule: new NativeClass('Terraria.GameContent.ItemDropRules', 'ItemDropRule'),
+            ItemDropDatabase: new NativeClass('Terraria.GameContent.ItemDropRules', 'ItemDropDatabase'),
+            CommonCode: new NativeClass('Terraria.GameContent.ItemDropRules', 'CommonCode')
+        },
+        Creative: {
+            CreativeItemSacrificesCatalog: new NativeClass('Terraria.GameContent.Creative', 'CreativeItemSacrificesCatalog')
+        }
     },
     DataStructures: {
         PlayerDrawSet: new NativeClass('Terraria.DataStructures', 'PlayerDrawSet')

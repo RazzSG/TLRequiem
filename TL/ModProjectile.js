@@ -79,8 +79,6 @@ export class ModProjectile extends ModTexturedType {
 
         projectile.Type = projectile.Projectile.type = tl.projectile.registerNew(projectileName);
 
-        tl.log(`InitializeProjectile: ` + projectile.Type)
-
         Terraria.Lang._projectileNameCache[projectile.Type] = ModLocalization.getTranslationProjectileName(projectileName);
 
         const projectileTexture = new ModTexture(projectile.Texture);

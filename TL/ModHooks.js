@@ -32,7 +32,6 @@ export class ModHooks {
             original(self, type);
             const projectile = ModProjectile.getModProjectile(type);
             projectile?.SetDefaults();
-            tl.log("Projectile.SetDefaults: " + JSON.stringify(projectile?.Projectile));
             Object.assign(self, projectile?.Projectile);
         });
 
@@ -63,12 +62,8 @@ export class ModHooks {
 
             original(self);
 
+            NPCLoader.NPCLoot(self);
             NPCLoader.OnKill(self);
-
-            for (let npc of GlobalNPC.RegisteredNPC) {
-                npc.NPCLoot(self);
-            }
-
         });
 
         Terraria.Player.Update.hook((original, self, i) => {
@@ -910,6 +905,8 @@ export class ModHooks {
             if (type < ItemLoader.MAX_VANILLA_ID) {
                 return original(self,type, noMatCheck);
             }
+
+            self.fishingPole = 0;
             const item = ItemLoader.getModItem(type);
             item?.SetDefaults();
             Object.assign(self, item?.Item);

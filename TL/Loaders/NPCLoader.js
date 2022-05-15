@@ -100,4 +100,10 @@ export class NPCLoader {
 
         return true;
     }
+
+    static NPCLoot(self) {
+        for (let npc of GlobalNPC.RegisteredNPC) {
+            npc.NPCLoot(self);
+        }
+    }
 }

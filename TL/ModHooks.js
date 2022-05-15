@@ -1716,6 +1716,11 @@ export class ModHooks {
 
             original(self);
         });
+        
+        Terraria.Projectile.StatusNPC.hook((original, self, i) => {
+            original(self, i);
+            PlayerLoader.OnHitNPCWithProj(self, Terraria.Main.npc[i]);
+        });
 
         ModHooks.isInitialized = true;
     }

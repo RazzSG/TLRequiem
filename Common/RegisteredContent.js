@@ -7,6 +7,7 @@ import {ShadowflameSkull} from "../Content/Items/Accessories/ShadowflameSkull.js
 import {GlobalNPC} from "../TL/GlobalNPC.js";
 import {RequiemGlobalNPC} from "../Content/RequiemGlobalNPC.js";
 import {SacredChalice} from "../Content/Items/Accessories/SacredChalice.js";
+import {AbsoluteFire} from "../Content/Items/Weapons/Magic/AbsoluteFire.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
@@ -16,4 +17,5 @@ export function initializeContent() {
     ModItem.register(FireAmulet);
     ModItem.register(ShadowflameSkull);
     ModItem.register(SacredChalice);
+    ModItem.register(AbsoluteFire);
 }

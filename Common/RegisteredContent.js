@@ -6,6 +6,7 @@ import {FireAmulet} from "../Content/Items/Accessories/FireAmulet.js";
 import {ShadowflameSkull} from "../Content/Items/Accessories/ShadowflameSkull.js";
 import {GlobalNPC} from "../TL/GlobalNPC.js";
 import {RequiemGlobalNPC} from "../Content/RequiemGlobalNPC.js";
+import {SacredChalice} from "../Content/Items/Accessories/SacredChalice.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
@@ -14,4 +15,5 @@ export function initializeContent() {
     ModItem.register(VialOfGraveEarth);
     ModItem.register(FireAmulet);
     ModItem.register(ShadowflameSkull);
+    ModItem.register(SacredChalice);
 }

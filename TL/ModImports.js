@@ -34,10 +34,14 @@ export const Terraria = {
     },
     UI: {
         ItemTooltip: new NativeClass("Terraria.UI", "ItemTooltip"),
-        ItemSorting: new NativeClass("Terraria.UI", "ItemSorting")
+        ItemSorting: new NativeClass("Terraria.UI", "ItemSorting"),
+        Chat: {
+            ChatManager: new NativeClass('Terraria.UI.Chat', 'ChatManager')
+        }
     },
     GameContent: {
         TextureAssets: new NativeClass('Terraria.GameContent', 'TextureAssets'),
+        FontAssets: new NativeClass('Terraria.GameContent', 'FontAssets'),
         ItemDropRules: {
             ItemDropRule: new NativeClass('Terraria.GameContent.ItemDropRules', 'ItemDropRule'),
             ItemDropDatabase: new NativeClass('Terraria.GameContent.ItemDropRules', 'ItemDropDatabase'),
@@ -53,6 +57,9 @@ export const Terraria = {
     Audio: {
         SoundEngine : new NativeClass('Terraria.Audio', 'SoundEngine')
     },
+    Chat: {
+        ChatCommandProcessor: new NativeClass('Terraria.Chat', 'ChatCommandProcessor')
+    }
 }
 
 export const Microsoft = {
@@ -63,7 +70,8 @@ export const Microsoft = {
             Graphics: {
                 Texture2D: new NativeClass('Microsoft.Xna.Framework.Graphics', 'Texture2D'),
                 SpriteEffects: new NativeClass('Microsoft.Xna.Framework.Graphics', 'SpriteEffects'),
-                Color: new NativeClass('Microsoft.Xna.Framework.Graphics', 'Color')
+                Color: new NativeClass('Microsoft.Xna.Framework.Graphics', 'Color'),
+                SpriteBatch: new NativeClass('Microsoft.Xna.Framework.Graphics', 'SpriteBatch')
             }
         }
     }
@@ -77,5 +85,6 @@ export const ReLogic = {
 }
 
 export const System = {
-    Nullable: new NativeClass('System', 'Nullable`1')
+    Nullable: new NativeClass('System', 'Nullable`1'),
+    Math: new NativeClass('System', 'Math')
 }

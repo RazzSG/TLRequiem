@@ -10,6 +10,8 @@ import {SacredChalice} from "../Content/Items/Accessories/SacredChalice.js";
 import {AbsoluteFire} from "../Content/Items/Weapons/Magic/AbsoluteFire.js";
 import {ElixirOfLife} from "../Content/Items/Accessories/ElixirOfLife.js";
 import {FlamingStar} from "../Content/Items/Tools/ClimateChange/FlamingStar.js";
+import {PearlOfPurity} from "../Content/Materials/PearlOfPurity.js";
+import {PearlOfPutrescence} from "../Content/Materials/PearlOfPutrescence.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
@@ -22,4 +24,6 @@ export function initializeContent() {
     ModItem.register(AbsoluteFire);
     ModItem.register(ElixirOfLife);
     ModItem.register(FlamingStar);
+    ModItem.register(PearlOfPurity);
+    ModItem.register(PearlOfPutrescence);
 }

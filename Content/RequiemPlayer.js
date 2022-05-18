@@ -1,11 +1,12 @@
 ﻿import {ModPlayer} from "../TL/ModPlayer.js";
-import {isSummon} from "../Common/RequiemUtilities.js";
+import {anyBossNPCs, isSummon} from "../Common/RequiemUtilities.js";
 import {Terraria} from "../TL/ModImports.js";
 
 export class RequiemPlayer extends ModPlayer {
     static fireAmulet;
     static shadowflameMinion;
     static oilMinion;
+    static areThereAnyBosses;
 
     constructor() {
         super();
@@ -15,9 +16,12 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.fireAmulet = false;
         RequiemPlayer.shadowflameMinion = false;
         RequiemPlayer.oilMinion = false;
+        RequiemPlayer.areThereAnyBosses = false;
     }
 
     PostUpdateEquips() {
+        RequiemPlayer.areThereAnyBosses = anyBossNPCs();
+        
         if (RequiemPlayer.fireAmulet) {
             this.player.maxMinions += 1;
         }

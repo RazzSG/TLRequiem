@@ -1718,6 +1718,16 @@ export class ModHooks {
             original(self, i);
             PlayerLoader.OnHitNPCWithProj(self, Terraria.Main.npc[i]);
         });
+        
+        Terraria.Player.KillMe.hook((original, self, damageSource, dmg, hitDirection, pvp) => {
+            if (!PlayerLoader.PreKill(self, dmg, hitDirection, pvp)) {
+                return;
+            }
+
+            original(self, damageSource, dmg, hitDirection, pvp);
+            
+            PlayerLoader.Kill(self, dmg, hitDirection, pvp, damageSource)
+        });
 
         ModHooks.isInitialized = true;
     }

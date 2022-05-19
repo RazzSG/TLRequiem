@@ -7,6 +7,8 @@ export class RequiemPlayer extends ModPlayer {
     static shadowflameMinion;
     static oilMinion;
     static areThereAnyBosses;
+    static requiemEndurance;
+    static requiemEnduranceCap = 0.5;
 
     constructor() {
         super();
@@ -17,6 +19,8 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.shadowflameMinion = false;
         RequiemPlayer.oilMinion = false;
         RequiemPlayer.areThereAnyBosses = false;
+        RequiemPlayer.requiemEndurance = 0;
+        RequiemPlayer.requiemEnduranceCap = 0.5;
     }
 
     PostUpdateEquips() {
@@ -33,6 +37,17 @@ export class RequiemPlayer extends ModPlayer {
         if (RequiemPlayer.oilMinion) {
             this.player.maxMinions += 2;
         }
+        
+        if (this.player.endurance > 0) {
+            RequiemPlayer.requiemEnduranceCap -= this.player.endurance;
+            if (RequiemPlayer.requiemEnduranceCap < 0.2){
+                RequiemPlayer.requiemEnduranceCap = 0.2;
+            }
+        }
+        if (RequiemPlayer.requiemEndurance > RequiemPlayer.requiemEnduranceCap) {
+            RequiemPlayer.requiemEndurance = RequiemPlayer.requiemEnduranceCap;
+        }
+        this.player.endurance += RequiemPlayer.requiemEndurance;
     }
 
     OnHitNPCWithProj(proj, target) {

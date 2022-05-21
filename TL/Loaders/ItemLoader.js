@@ -8,6 +8,8 @@ import { ModTexture } from "../ModTexture.js"
 
 import { ModLocalization } from "../ModLocalization.js";
 
+import { GlobalItem } from "../GlobalItem.js";
+
 export class ItemLoader {
 
     static RegisteredItems = [];
@@ -284,6 +286,10 @@ export class ItemLoader {
         }
 
         ModItem.getModItem(item.type)?.UpdateAccessory(player);
+
+        for (let globalItem of GlobalItem.RegisteredItem) {
+            globalItem.UpdateAccessory(item, player);
+        }
     }
 
     static UpdateArmorSet(player, head, body, legs) {
@@ -315,6 +321,10 @@ export class ItemLoader {
         }
 
         ModItem.getModItem(item.type)?.UpdateInventory(player);
+
+        for (let globalItem of GlobalItem.RegisteredItem) {
+            globalItem.UpdateInventory(item, player);
+        }
     }
 
     static UpdateEquip(item, player) {
@@ -323,6 +333,10 @@ export class ItemLoader {
         }
 
         ModItem.getModItem(item.type)?.UpdateEquip(player);
+
+        for (let globalItem of GlobalItem.RegisteredItem) {
+            globalItem.UpdateEquip(item, player);
+        }
     }
 
     static UpdateVanity(item, player) {

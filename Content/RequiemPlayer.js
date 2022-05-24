@@ -1,6 +1,6 @@
 ﻿import {ModPlayer} from "../TL/ModPlayer.js";
-import {anyBossNPCs, isSummon} from "../Common/RequiemUtilities.js";
-import {Terraria} from "../TL/ModImports.js";
+import * as Utils from "../Common/RequiemUtilities.js";
+import {Microsoft, System, Terraria} from "../TL/ModImports.js";
 
 export class RequiemPlayer extends ModPlayer {
     static fireAmulet;
@@ -9,6 +9,7 @@ export class RequiemPlayer extends ModPlayer {
     static areThereAnyBosses;
     static requiemEndurance;
     static requiemEnduranceCap = 0.5;
+    static statSheet = false;
 
     constructor() {
         super();
@@ -24,7 +25,7 @@ export class RequiemPlayer extends ModPlayer {
     }
 
     PostUpdateEquips() {
-        RequiemPlayer.areThereAnyBosses = anyBossNPCs();
+        RequiemPlayer.areThereAnyBosses = Utils.anyBossNPCs();
         
         if (RequiemPlayer.fireAmulet) {
             this.player.maxMinions += 1;
@@ -51,7 +52,7 @@ export class RequiemPlayer extends ModPlayer {
     }
 
     OnHitNPCWithProj(proj, target) {
-        if (isSummon(proj)) {
+        if (Utils.isSummon(proj)) {
             if (RequiemPlayer.fireAmulet) {
                 target.AddBuff(24, 60, false);
             }

@@ -1,8 +1,7 @@
 ﻿import {Terraria, Microsoft, System} from "../TL/ModImports.js";
+import {RequiemPlayer} from "./RequiemPlayer.js";
 
 export function debugPlayerInfo() {
-    let showStatSheet = false;
-    
     Terraria.Main.DrawRain.hook((original, self) => {
         original(self);
 
@@ -21,7 +20,7 @@ export function debugPlayerInfo() {
         backgroundPanelRectangle.Width = backgroundPanelWidth;
         backgroundPanelRectangle.Height = backgroundPanelHeight;
 
-        if (player.active && showStatSheet) {
+        if (player.active && RequiemPlayer.statSheet) {
             function drawTexture(texture, rectangle, color) {
                 Terraria.Main.spriteBatch['void Draw(Texture2D texture, Rectangle destinationRectangle, Color color)']
                 (texture, rectangle, color);
@@ -91,15 +90,6 @@ export function debugPlayerInfo() {
             addStat(4479, `Luck: ${System.Math['double Round(double value, int digits)'](player.luck, 2)}`, 2, 8);
             addStat(2374, `Fishing Quests: ${player.anglerQuestsFinished}`, 2, 9);
             addStat(493, `${player.wingTimeMax / 60 > 60 || player.empressBrooch ? 'Wing Time: ∞' : 'Wing Time: ' + System.Math['double Round(double value, int digits)'](player.wingTimeMax / 60.0, 2) + ' sec'}`, 2, 10);
-        }
-    });
-    
-    Terraria.Chat.ChatCommandProcessor.ProcessIncomingMessage.hook((original, self, message, client_id) => {
-        original(self, message, client_id);
-
-        const command = message.Text;
-        if (command === '/statSheet') {
-            showStatSheet = !showStatSheet;
         }
     });
 }

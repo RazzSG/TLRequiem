@@ -12,6 +12,7 @@ import {ElixirOfLife} from "../Content/Items/Accessories/ElixirOfLife.js";
 import {FlamingStar} from "../Content/Items/Tools/ClimateChange/FlamingStar.js";
 import {PearlOfPurity} from "../Content/Materials/PearlOfPurity.js";
 import {PearlOfPutrescence} from "../Content/Materials/PearlOfPutrescence.js";
+import {StatSheet} from "../Content/Items/Tools/StatSheet.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
@@ -26,4 +27,5 @@ export function initializeContent() {
     ModItem.register(FlamingStar);
     ModItem.register(PearlOfPurity);
     ModItem.register(PearlOfPutrescence);
+    ModItem.register(StatSheet);
 }

@@ -1,6 +1,7 @@
 ﻿import {Terraria} from "../TL/ModImports.js";
+import {GlobalItem} from "../TL/GlobalItem.js";
 
-export class RequiemGlobalItem {
+export class RequiemGlobalItem extends GlobalItem {
     static Rarity0BuyPrice = Terraria.Item.buyPrice(0, 0, 50, 0);
     static Rarity1BuyPrice = Terraria.Item.buyPrice(0, 1, 0, 0);
     static Rarity2BuyPrice = Terraria.Item.buyPrice(0, 2, 0, 0);

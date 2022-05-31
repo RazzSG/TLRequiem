@@ -14,6 +14,7 @@ export const Terraria = {
     GetItemSettings: new NativeClass('Terraria', 'GetItemSettings'),
     Chest: new NativeClass('Terraria', 'Chest'),
     Dust: new NativeClass('Terraria', 'Dust'),
+    CombatText: new NativeClass('Terraria', 'CombatText'),
     ID: {
         NPCID: new NativeClass('Terraria.ID', 'NPCID'),
         SoundID: new NativeClass('Terraria.ID', 'SoundID'),
@@ -67,6 +68,7 @@ export const Microsoft = {
         Framework: {
             Vector2: new NativeClass('Microsoft.Xna.Framework', 'Vector2'),
             Rectangle: new NativeClass('Microsoft.Xna.Framework', 'Rectangle'),
+            MathHelper: new NativeClass('Microsoft.Xna.Framework', 'MathHelper'),
             Graphics: {
                 Texture2D: new NativeClass('Microsoft.Xna.Framework.Graphics', 'Texture2D'),
                 SpriteEffects: new NativeClass('Microsoft.Xna.Framework.Graphics', 'SpriteEffects'),

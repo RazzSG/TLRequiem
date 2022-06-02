@@ -17,6 +17,7 @@ import {PearlOfPutrescence} from "../Content/Materials/PearlOfPutrescence.js";
 import {StatSheet} from "../Content/Items/Tools/StatSheet.js";
 import {DefianceBanner} from "../Content/Items/Accessories/DefianceBanner.js";
 import {SpellbindersSigil} from "../Content/Items/Accessories/SpellbindersSigil.js";
+import {ArtemisSoul} from "../Content/Items/Accessories/ArtemisSoul.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
@@ -35,4 +36,5 @@ export function initializeContent() {
     ModItem.register(StatSheet);
     ModItem.register(DefianceBanner);
     ModItem.register(SpellbindersSigil);
+    ModItem.register(ArtemisSoul);
 }

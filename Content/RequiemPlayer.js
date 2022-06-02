@@ -6,9 +6,7 @@ export class RequiemPlayer extends ModPlayer {
     static fireAmulet;
     static shadowflameMinion;
     static oilMinion;
-    static areThereAnyBosses;
-    static requiemEndurance;
-    static requiemEnduranceCap = 0.5;
+    static areThereAnyBosses = false;
     static statSheet = false;
     static defianceBanner;
     static defianceBannerBonus;
@@ -21,15 +19,13 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.fireAmulet = false;
         RequiemPlayer.shadowflameMinion = false;
         RequiemPlayer.oilMinion = false;
-        RequiemPlayer.areThereAnyBosses = false;
-        RequiemPlayer.requiemEndurance = 0;
-        RequiemPlayer.requiemEnduranceCap = 0.5;
         RequiemPlayer.defianceBanner = false;
         RequiemPlayer.defianceBannerBonus = 0;
     }
 
     PostUpdateEquips() {
         RequiemPlayer.areThereAnyBosses = Utils.anyBossNPCs();
+        RequiemPlayer.Limits(this.player);
         
         if (RequiemPlayer.fireAmulet) {
             this.player.maxMinions += 1;
@@ -79,20 +75,9 @@ export class RequiemPlayer extends ModPlayer {
                 this.player.meleeDamage += RequiemPlayer.defianceBannerBonus;
                 this.player.meleeSpeed += RequiemPlayer.defianceBannerBonus;
                 this.player.meleeCrit += Math.round(RequiemPlayer.defianceBannerBonus * 100);
-                RequiemPlayer.requiemEndurance += RequiemPlayer.defianceBannerBonus / 2;
+                this.player.endurance += RequiemPlayer.defianceBannerBonus / 2;
             }
         }
-        
-        if (this.player.endurance > 0) {
-            RequiemPlayer.requiemEnduranceCap -= this.player.endurance;
-            if (RequiemPlayer.requiemEnduranceCap < 0.2) {
-                RequiemPlayer.requiemEnduranceCap = 0.2;
-            }
-        }
-        if (RequiemPlayer.requiemEndurance > RequiemPlayer.requiemEnduranceCap) {
-            RequiemPlayer.requiemEndurance = RequiemPlayer.requiemEnduranceCap;
-        }
-        this.player.endurance += RequiemPlayer.requiemEndurance;
     }
 
     OnHitNPCWithProj(proj, target) {
@@ -110,6 +95,15 @@ export class RequiemPlayer extends ModPlayer {
                     target.AddBuff(204, 60 * Terraria.Main.rand['int Next(int minValue, int maxValue)'](4, 10), false);
                 }
             }
+        }
+    }
+
+    static Limits(player) {
+        if (player.endurance > 0) {
+            player.endurance = 1 - 1 / (1 + player.endurance);
+        }
+        if (RequiemPlayer.areThereAnyBosses && player.aggro < 0) {
+            player.aggro = 0;
         }
     }
 }

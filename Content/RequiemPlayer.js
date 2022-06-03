@@ -10,6 +10,9 @@ export class RequiemPlayer extends ModPlayer {
     static statSheet = false;
     static defianceBanner;
     static defianceBannerBonus;
+    static icyHeart;
+    static icyHeartTimer = 0;
+    static icyHeartDR = 1;
 
     constructor() {
         super();
@@ -21,9 +24,12 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.oilMinion = false;
         RequiemPlayer.defianceBanner = false;
         RequiemPlayer.defianceBannerBonus = 0;
+        RequiemPlayer.icyHeart = false;
     }
 
     PostUpdateEquips() {
+        RequiemPlayer.icyHeartTimer++;
+        
         RequiemPlayer.areThereAnyBosses = Utils.anyBossNPCs();
         RequiemPlayer.Limits(this.player);
         
@@ -78,6 +84,23 @@ export class RequiemPlayer extends ModPlayer {
                 this.player.endurance += RequiemPlayer.defianceBannerBonus / 2;
             }
         }
+
+        if (RequiemPlayer.icyHeart) {
+            RequiemPlayer.icyHeartDR = Microsoft.Xna.Framework.MathHelper.Lerp(1, 0, Microsoft.Xna.Framework.MathHelper.Clamp(RequiemPlayer.icyHeartTimer, 0, 1200) / 1200);
+            let num = Microsoft.Xna.Framework.MathHelper.Lerp(1, 20, Microsoft.Xna.Framework.MathHelper.Clamp(RequiemPlayer.icyHeartTimer, 0, 1200) / 1200);
+            let playerWidth = this.player.width * 1.2;
+            let playerHeight = this.player.height * 1.1;
+            for (let i = 0; i < num; i++) {
+                let radius = Terraria.Main.rand.NextDouble() * 2.0 * 3.14;
+                const vector = Microsoft.Xna.Framework.Vector2.new();
+                vector.X = Math.sin(radius) * playerWidth;
+                vector.Y = Math.cos(radius) * playerHeight;
+                let num = Microsoft.Xna.Framework.Vector2.op_Subtraction(Microsoft.Xna.Framework.Vector2.op_Addition(this.player.Center, vector), Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Microsoft.Xna.Framework.Vector2.One, 4));
+                const dust = Terraria.Dust.NewDust(num, 0, 0, 135, 0, 0, 100, Microsoft.Xna.Framework.Graphics.Color.new(), 1);
+                Terraria.Main.dust[dust].noGravity = true;
+                Terraria.Main.dust[dust].velocity = this.player.velocity;
+            }
+        }
     }
 
     OnHitNPCWithProj(proj, target) {
@@ -96,6 +119,19 @@ export class RequiemPlayer extends ModPlayer {
                 }
             }
         }
+    }
+
+    PreHurt(pvp, quiet, modifier) {
+        if (RequiemPlayer.icyHeart) {
+            modifier.damage *= RequiemPlayer.icyHeartDR;
+            RequiemPlayer.icyHeartTimer = -600;
+            if (modifier.damage === 0) {
+                this.player.immune = true;
+                this.player.immuneTime = 45;
+            }
+        }
+        
+        return true;
     }
 
     static Limits(player) {

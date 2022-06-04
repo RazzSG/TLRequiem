@@ -13,6 +13,7 @@ export class RequiemPlayer extends ModPlayer {
     static icyHeart;
     static icyHeartTimer = 0;
     static icyHeartDR = 1;
+    static painkiller;
 
     constructor() {
         super();
@@ -25,6 +26,7 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.defianceBanner = false;
         RequiemPlayer.defianceBannerBonus = 0;
         RequiemPlayer.icyHeart = false;
+        RequiemPlayer.painkiller = false;
     }
 
     PostUpdateEquips() {
@@ -99,6 +101,70 @@ export class RequiemPlayer extends ModPlayer {
                 const dust = Terraria.Dust.NewDust(num, 0, 0, 135, 0, 0, 100, Microsoft.Xna.Framework.Graphics.Color.new(), 1);
                 Terraria.Main.dust[dust].noGravity = true;
                 Terraria.Main.dust[dust].velocity = this.player.velocity;
+            }
+        }
+        
+        if (RequiemPlayer.painkiller) {
+            for (let i = 0; i < Terraria.Player.maxBuffs; i++) {
+                let buff = this.player.buffType[i];
+                if ((buff === 163 || buff === 80 || buff === 69 || buff === 46 || buff === 36 || buff === 33 || buff === 32 || buff === 31 || buff === 22) && this.player.miscCounter % 2 === 0) {
+                    this.player.buffTime[i]++;
+                }
+                switch (buff) {
+                    case 163: {
+                        this.player.headcovered = false;
+                        this.player.statDefense += 50;
+                        Utils.allDamageBoost(this.player, 0.5);
+                        Utils.allCritBoost(this.player, 25);
+                        break;
+                    }
+                    case 80: {
+                        this.player.blackout = false;
+                        this.player.statDefense += 30;
+                        Utils.allDamageBoost(this.player, 0.25);
+                        Utils.allCritBoost(this.player, 10);
+                        break;
+                    }
+                    case 69: {
+                        this.player.statDefense += 40;
+                        break;
+                    }
+                    case 46: {
+                        this.player.chilled = false;
+                        this.player.moveSpeed += 0.3;
+                        break;
+                    }
+                    case 36: {
+                        this.player.brokenArmor = false;
+                        this.player.statDefense += this.player.statDefense * 0.25;
+                        break;
+                    }
+                    case 33: {
+                        this.player.meleeDamage += 0.15;
+                        this.player.statDefense += 14;
+                        this.player.moveSpeed += 0.3;
+                        break;
+                    }
+                    case 32: {
+                        this.player.slow = false;
+                        this.player.moveSpeed += 0.5;
+                        break;
+                    }
+                    case 31: {
+                        this.player.confused = false;
+                        this.player.statDefense += 30;
+                        Utils.allDamageBoost(this.player, 0.25);
+                        Utils.allCritBoost(this.player, 10);
+                        break;
+                    }
+                    case 22: {
+                        this.player.blind = false;
+                        this.player.statDefense += 15;
+                        Utils.allDamageBoost(this.player, 0.1);
+                        Utils.allCritBoost(this.player, 5);
+                        break;
+                    }
+                }
             }
         }
     }

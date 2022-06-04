@@ -32,4 +32,29 @@ export function allDamageBoost(player, boost) {
     player.rangedDamage += boost;
     player.minionDamage += boost;
 }
+
+export function secondsToFrames(seconds) {
+    return seconds * 60;
+}
+
+export function giveIFrames(player, frames, blink = false) {
+    let flag = false;
+    for (let i = 0; i < player.hurtCooldowns.length; i++) {
+        if (player.hurtCooldowns[i] < frames) {
+            flag = true;
+        }
+    }
+    if (!flag) {
+        return false;
+    }
+    player.immune = true;
+    player.immuneNoBlink = !blink;
+    player.immuneTime = frames;
+    for (let k = 0; k < player.hurtCooldowns.length; k++){
+        if (player.hurtCooldowns[k] < frames) {
+            player.hurtCooldowns[k] = frames;
+        }
+    }
+    return true;
+}
 }

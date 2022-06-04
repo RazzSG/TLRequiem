@@ -20,6 +20,7 @@ import {SpellbindersSigil} from "../Content/Items/Accessories/SpellbindersSigil.
 import {ArtemisSoul} from "../Content/Items/Accessories/ArtemisSoul.js";
 import {IcyHeart} from "../Content/Items/Accessories/IcyHeart.js";
 import {Painkiller} from "../Content/Items/Accessories/Painkiller.js";
+import {AnkhOfLife} from "../Content/Items/Accessories/AnkhOfLife.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
@@ -41,4 +42,5 @@ export function initializeContent() {
     ModItem.register(ArtemisSoul);
     ModItem.register(IcyHeart);
     ModItem.register(Painkiller);
+    ModItem.register(AnkhOfLife);
 }

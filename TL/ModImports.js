@@ -53,7 +53,8 @@ export const Terraria = {
         }
     },
     DataStructures: {
-        PlayerDrawSet: new NativeClass('Terraria.DataStructures', 'PlayerDrawSet')
+        PlayerDrawSet: new NativeClass('Terraria.DataStructures', 'PlayerDrawSet'),
+        PlayerDeathReason: new NativeClass('Terraria.DataStructures', 'PlayerDeathReason')
     },
     Audio: {
         SoundEngine : new NativeClass('Terraria.Audio', 'SoundEngine')

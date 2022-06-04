@@ -14,6 +14,10 @@ export class RequiemPlayer extends ModPlayer {
     static icyHeartTimer = 0;
     static icyHeartDR = 1;
     static painkiller;
+    static ankhOfLife;
+    static ankhOfLifeCooldown = 0
+    static encased = false;
+    static encasedTimer = 0;
 
     constructor() {
         super();
@@ -27,12 +31,18 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.defianceBannerBonus = 0;
         RequiemPlayer.icyHeart = false;
         RequiemPlayer.painkiller = false;
+        RequiemPlayer.ankhOfLife = false;
+    }
+    
+    UpdateDead() {
+        RequiemPlayer.ankhOfLife = false;
     }
 
     PostUpdateEquips() {
         RequiemPlayer.icyHeartTimer++;
         
         RequiemPlayer.areThereAnyBosses = Utils.anyBossNPCs();
+        RequiemPlayer.MiscEffects(this.player);
         RequiemPlayer.Limits(this.player);
         
         if (RequiemPlayer.fireAmulet) {
@@ -186,18 +196,83 @@ export class RequiemPlayer extends ModPlayer {
             }
         }
     }
+    
+    UpdateLifeRegen() {
+        if (RequiemPlayer.ankhOfLife) {
+            if (this.player.statLife < this.player.statLifeMax2 / 2) {
+                this.player.lifeRegen++;
+            }
+            if (this.player.statLife < this.player.statLifeMax2 / 4) {
+                this.player.lifeRegen++;
+            }
+            if (this.player.statLife < this.player.statLifeMax2 / 10) {
+                this.player.lifeRegen += 2;
+            }
+            if (this.player.poisoned || this.player.onFire || this.player.onFrostBurn) {
+                this.player.lifeRegen += 4;
+            }
+        }
+    }
 
     PreHurt(pvp, quiet, modifier) {
         if (RequiemPlayer.icyHeart) {
             modifier.damage *= RequiemPlayer.icyHeartDR;
             RequiemPlayer.icyHeartTimer = -600;
             if (modifier.damage === 0) {
-                this.player.immune = true;
-                this.player.immuneTime = 45;
+                Utils.giveIFrames(this.player, 45, true);
             }
         }
         
         return true;
+    }
+    
+    PreKill(damage, hitDirection, pvp) {
+        if (RequiemPlayer.ankhOfLife && RequiemPlayer.ankhOfLifeCooldown === 0) {
+            RequiemPlayer.encased = true;
+            RequiemPlayer.ankhOfLifeCooldown = Utils.secondsToFrames(180);
+            this.player.statLife = this.player.statLifeMax2 * 3 / 10;
+            Terraria.Audio.SoundEngine['void PlaySound(int type, Vector2 position, int style)'](2, this.player.position, 92);
+            for (let i = 0; i < 60; i++) {
+                const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 88, 0, 0, 0, Microsoft.Xna.Framework.Graphics.Color.new(), 2.5);
+                Terraria.Main.dust[dust].noGravity = true;
+                Terraria.Main.dust[dust].velocity = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Terraria.Main.dust[dust].velocity, 5);
+            }
+            return false;
+        }
+        return true;
+    }
+    
+    static MiscEffects(player) {
+        RequiemPlayer.ankhOfLifeCooldown--;
+        if (RequiemPlayer.ankhOfLifeCooldown < 0) {
+            RequiemPlayer.ankhOfLifeCooldown = 0;
+        }
+        
+        player.statManaMax2 += (RequiemPlayer.ankhOfLife ? 50 : 0);
+        
+        if (RequiemPlayer.ankhOfLife) {
+            player.manaCost *= 0.85;
+        }
+        
+        if (RequiemPlayer.encased) {
+            RequiemPlayer.encasedTimer++;
+            if (RequiemPlayer.encasedTimer > 0 && RequiemPlayer.encasedTimer < 180) {
+                RequiemPlayer.encased = false;
+                player.frozen = true;
+                Utils.giveIFrames(player, 90);
+                player.velocity.X = 0;
+                player.velocity.Y = -0.4;
+                const dust = Terraria.Dust.NewDust(player.position, player.width, player.height, 88, 0, 0, 0, Microsoft.Xna.Framework.Graphics.Color.new(), 1);
+                Terraria.Main.dust[dust].noGravity = true;
+                Terraria.Main.dust[dust].velocity = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Terraria.Main.dust[dust].velocity, 2);
+                player.buffImmune[47] = true;
+                player.buffImmune[46] = true;
+            } else if (RequiemPlayer.encasedTimer >= 180) {
+                Terraria.Audio.SoundEngine['void PlaySound(int type, Vector2 position, int style)'](2, player.position, 27);
+                RequiemPlayer.encasedTimer = 0;
+                RequiemPlayer.encased = false;
+            }
+        }
     }
 
     static Limits(player) {

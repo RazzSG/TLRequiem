@@ -1,4 +1,4 @@
-import { Terraria, Microsoft } from "./ModImports.js";
+import {Terraria, Microsoft, System} from "./ModImports.js";
 
 import { ModPlayer } from "./ModPlayer.js";
 
@@ -18,6 +18,7 @@ import { CombinedLoader } from "./Loaders/CombinedLoader.js";
 
 import { PlayerLoader } from "./Loaders/PlayerLoader.js";
 import { NPCLoader } from "./Loaders/NPCLoader.js";
+import {RequiemPlayer} from "../Content/RequiemPlayer.js";
 
 export class ModHooks {
 	static OnHitTemp = [];
@@ -1017,10 +1018,429 @@ export class ModHooks {
         });
 
         Terraria.Player.UpdateLifeRegen.hook((original, self) => {
+            let flag = false;
+            if (self.shinyStone && Math.abs(self.velocity.X) < 0.05 && Math.abs(self.velocity.Y) < 0.05 && self.itemAnimation === 0) {
+                flag = true;
+            }
+
+            if (self.poisoned) {
+                if (self.lifeRegen > 0) {
+                    self.lifeRegen = 0;
+                }
+                
+                self.lifeRegenTime = 0;
+                self.lifeRegen -= 4;
+            }
+
+            if (self.venom) {
+                if (self.lifeRegen > 0) {
+                    self.lifeRegen = 0;
+                }
+
+                self.lifeRegenTime = 0;
+                self.lifeRegen -= 30;
+            }
+
+            if (self.onFire) {
+                if (self.lifeRegen > 0) {
+                    self.lifeRegen = 0;
+                }
+
+                self.lifeRegenTime = 0;
+                self.lifeRegen -= 8;
+            }
+
+            if (self.onFire3) {
+                if (self.lifeRegen > 0) {
+                    self.lifeRegen = 0;
+                }
+
+                self.lifeRegenTime = 0;
+                self.lifeRegen -= 8;
+            }
+
+            if (self.onFrostBurn) {
+                if (self.lifeRegen > 0) {
+                    self.lifeRegen = 0;
+                }
+
+                self.lifeRegenTime = 0;
+                self.lifeRegen -= 16;
+            }
+
+            if (self.onFrostBurn2) {
+                if (self.lifeRegen > 0) {
+                    self.lifeRegen = 0;
+                }
+
+                self.lifeRegenTime = 0;
+                self.lifeRegen -= 16;
+            }
+
+            if (self.onFire2) {
+                if (self.lifeRegen > 0) {
+                    self.lifeRegen = 0;
+                }
+
+                self.lifeRegenTime = 0;
+                self.lifeRegen -= 24;
+            }
+
+            if (self.burned) {
+                if (self.lifeRegen > 0) {
+                    self.lifeRegen = 0;
+                }
+
+                self.lifeRegenTime = 0;
+                self.lifeRegen -= 60;
+                self.moveSpeed *= 0.5;
+            }
+
+            if (self.suffocating) {
+                if (self.lifeRegen > 0) {
+                    self.lifeRegen = 0;
+                }
+
+                self.lifeRegenTime = 0;
+                self.lifeRegen -= 40;
+            }
+
+            if (self.electrified) {
+                if (self.lifeRegen > 0) {
+                    self.lifeRegen = 0;
+                }
+
+                self.lifeRegenTime = 0;
+                self.lifeRegen -= 8;
+                if (self.controlLeft || self.controlRight) {
+                    self.lifeRegen -= 32;
+                }
+            }
+
+            if (self.tongued && Terraria.Main.expertMode) {
+                if (self.lifeRegen > 0) {
+                    self.lifeRegen = 0;
+                }
+
+                self.lifeRegenTime = 0;
+                self.lifeRegen -= 100;
+            }
+            
             PlayerLoader.UpdateBadLifeRegen(self);
+
+            if (self.honey && self.lifeRegen < 0) {
+                self.lifeRegen += 4;
+                if (self.lifeRegen > 0) {
+                    self.lifeRegen = 0;
+                }
+            }
+
+            if (self.lifeRegen < 0 && self.nebulaLevelLife > 0) {
+                self.lifeRegen = 0;
+            }
+
+            if (flag && self.lifeRegen < 0) {
+                self.lifeRegen /= 2;
+            }
+
+            self.lifeRegenTime++;
+            if (self.crimsonRegen) {
+                self.lifeRegenTime++;
+            }
+
+            if (self.soulDrain > 0) {
+                self.lifeRegenTime += 2;
+            }
+
+            if (flag) {
+                if (self.lifeRegenTime > 90 && self.lifeRegenTime < 1800) {
+                    self.lifeRegenTime = 1800;
+                }
+
+                self.lifeRegenTime += 4;
+                self.lifeRegen += 4;
+            }
+
+            if (self.honey) {
+                self.lifeRegenTime += 2;
+                self.lifeRegen += 2;
+            }
+
+            if (self.starving) {
+                if (self.lifeRegen > 0) {
+                    self.lifeRegen = 0;
+                }
+
+                if (self.lifeRegenCount > 0) {
+                    self.lifeRegenCount = 0;
+                }
+
+                if (self.lifeRegenTime > 0) {
+                    self.lifeRegenTime = 0;
+                }
+
+                let num = 3000;
+                let num2 = 120 * self.statLifeMax2 / num;
+                if (num2 < 4) {
+                    num2 = 4;
+                }
+
+                self.lifeRegen = -num2;
+            }
+
+            if (self.soulDrain > 0) {
+                let num3 = (5 + self.soulDrain) / 2;
+                self.lifeRegenTime += num3;
+                self.lifeRegen += num3;
+            }
+
+            if (self.heartyMeal) {
+                let num4 = 3 * 120 / 60;
+                self.lifeRegen += num4;
+            }
+
+            if (self.whoAmI === Terraria.Main.myPlayer && Terraria.Main.SceneMetrics.HasCampfire) {
+                self.lifeRegen++;
+            }
+
+            if (self.whoAmI === Terraria.Main.myPlayer && Terraria.Main.SceneMetrics.HasHeartLantern) {
+                self.lifeRegen += 2;
+            }
+            
             PlayerLoader.UpdateLifeRegen(self);
 
-            original(self);
+            if (self.bleed) {
+                self.lifeRegenTime = 0;
+            }
+
+            let num5 = 0;
+            if (self.lifeRegenTime >= 300) {
+                num5 += 1;
+            }
+
+            if (self.lifeRegenTime >= 600) {
+                num5 += 1;
+            }
+
+            if (self.lifeRegenTime >= 900) {
+                num5 += 1;
+            }
+
+            if (self.lifeRegenTime >= 1200) {
+                num5 += 1;
+            }
+
+            if (self.lifeRegenTime >= 1500) {
+                num5 += 1;
+            }
+
+            if (self.lifeRegenTime >= 1800) {
+                num5 += 1;
+            }
+
+            if (self.lifeRegenTime >= 2400) {
+                num5 += 1;
+            }
+
+            if (self.lifeRegenTime >= 3000) {
+                num5 += 1;
+            }
+
+            if (flag) {
+                let num6 = self.lifeRegenTime - 3000;
+                num6 /= 300;
+                if (num6 > 0) {
+                    if (num6 > 30) {
+                        num6 = 30;
+                    }
+
+                    num5 += num6;
+                }
+            }
+            else if (self.lifeRegenTime >= 3600) {
+                num5 += 1;
+                self.lifeRegenTime = 3600;
+            }
+
+            if (self.sitting.isSitting || self.sleeping.isSleeping) {
+                self.lifeRegenTime += 10;
+                num5 *= 1.5;
+            }
+
+            num5 = ((self.velocity.X !== 0 && self.grappling[0] <= 0) ? (num5 * 0.5) : (num5 * 1.25));
+            if (self.crimsonRegen) {
+                num5 *= 1.5;
+            }
+
+            if (self.shinyStone) {
+                num5 *= 1.1;
+            }
+
+            if (self.whoAmI === Terraria.Main.myPlayer && Terraria.Main.SceneMetrics.HasCampfire) {
+                num5 *= 1.1;
+            }
+
+            if (Terraria.Main.expertMode && !self.wellFed) {
+                num5 = ((!self.shinyStone) ? (num5 / 2) : (num5 * 0.75));
+            }
+
+            if (self.rabid) {
+                num5 = ((!self.shinyStone) ? (num5 / 2) : (num5 * 0.75));
+            }
+            
+            let num7 = self.statLifeMax2 / 400 * 0.85 + 0.15;
+            num5 *= num7;
+            self.lifeRegen += Math.round(num5);
+            self.lifeRegenCount += self.lifeRegen;
+            if (self.palladiumRegen) {
+                self.lifeRegenCount += 4;
+            }
+
+            if (flag && self.lifeRegen > 0 && self.statLife < self.statLifeMax2) {
+                self.lifeRegenCount++;
+                if (flag && (Terraria.Main.rand['int Next(int maxValue)'](30000) < self.lifeRegenTime || Terraria.Main.rand['int Next(int maxValue)'](30) === 0)) {
+                    let num8 = Terraria.Dust.NewDust(self.position, self.width, self.height, 55, 0, 0, 200, Microsoft.Xna.Framework.Graphics.Color.new(), 0.5);
+                    Terraria.Main.dust[num8].noGravity = true;
+                    Terraria.Main.dust[num8].velocity = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Terraria.Main.dust[num8].velocity, 0.75);
+                    Terraria.Main.dust[num8].fadeIn = 1.3;
+                    let vector = Microsoft.Xna.Framework.Vector2.new();
+                    vector.X = Terraria.Main.rand['int Next(int minValue, int maxValue)'](-100, 101);
+                    vector.Y = Terraria.Main.rand['int Next(int minValue, int maxValue)'](-100, 101);
+                    Microsoft.Xna.Framework.Vector2['void Normalize()'](vector);
+                    vector = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](vector, Terraroa.Main.rand['int Next(int minValue, int maxValue)'](50, 100) * 0.04);
+                    Terraria.Main.dust[num8].velocity = vector;
+                    Microsoft.Xna.Framework.Vector2['void Normalize()'](vector);
+                    vector = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](vector, 34);
+                    Terraria.Main.dust[num8].position = Microsoft.Xna.Framework.Vector2.op_Subtraction(self.Center, vector);
+                }
+            }
+
+            while (self.lifeRegenCount >= 120) {
+                self.lifeRegenCount -= 120;
+                if (self.statLife < self.statLifeMax2) {
+                    self.statLife++;
+                    if (self.crimsonRegen) {
+                        for (let i = 0; i < 10; i++) {
+                            let num9 = Terraria.Dust.NewDust(self.position, self.width, self.height, 5, 0, 0, 175, Microsoft.Xna.Framework.Graphics.Color.new(), 1.75);
+                            Terraria.Main.dust[num9].noGravity = true;
+                            Terraria.Main.dust[num9].velocity = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Main.dust[num9].velocity, 0.75);
+                            let num10 = Terraria.Main.rand['int Next(int minValue, int maxValue)'](-40, 41);
+                            let num11 = Terraria.Main.rand['int Next(int minValue, int maxValue)'](-40, 41);
+                            Terraria.Main.dust[num9].position.X += num10;
+                            Terraria.Main.dust[num9].position.Y += num11;
+                            Terraria.Main.dust[num9].velocity.X = -num10 * 0.075;
+                            Terraria.Main.dust[num9].velocity.Y = -num11 * 0.075;
+                        }
+                    }
+                }
+
+                if (self.statLife > self.statLifeMax2) {
+                    self.statLife = self.statLifeMax2;
+                }
+            }
+
+            if (self.burned || self.suffocating || (self.tongued && Terraria.Main.expertMode)) {
+                while (self.lifeRegenCount <= -600) {
+                    self.lifeRegenCount += 600;
+                    self.statLife -= 5;
+                    let rect = Microsoft.Xna.Framework.Rectangle.new();
+                    rect.X = self.position.X;
+                    rect.Y = self.position.Y;
+                    rect.Width = self.width;
+                    rect.Height = self.height;
+                    Terraria.CombatText['int NewText(Rectangle location, Color color, int amount, bool dramatic, bool dot)']
+                    (rect, Terraria.CombatText.LifeRegen, 5, false, true);
+                    if (self.statLife <= 0 && self.whoAmI === Terraria.Main.myPlayer) {
+                        if (self.suffocating) {
+                            self.KillMe(Terraria.DataStructures.PlayerDeathReason.ByOther(7), 10.0, 0, false);
+                        } else {
+                            self.KillMe(Terraria.DataStructures.PlayerDeathReason.ByOther(8), 10.0, 0, false);
+                        }
+                    }
+                }
+
+                return;
+            }
+
+            if (self.starving) {
+                let num12 = self.statLifeMax2 / 50;
+                if (num12 < 2) {
+                    num12 = 2;
+                }
+
+                let num13 = (self.ZoneDesert || self.ZoneSnow) ? (num12 * 2) : num12;
+                let num14 = 120 * num12;
+                while (self.lifeRegenCount <= -num14) {
+                    self.lifeRegenCount += num14;
+                    self.statLife -= num13;
+                    let rect = Microsoft.Xna.Framework.Rectangle.new();
+                    rect.X = self.position.X;
+                    rect.Y = self.position.Y;
+                    rect.Width = self.width;
+                    rect.Height = self.height;
+                    Terraria.CombatText['int NewText(Rectangle location, Color color, int amount, bool dramatic, bool dot)']
+                    (rect, Terraria.CombatText.LifeRegen, num13, false, true);
+                    if (self.statLife <= 0 && self.whoAmI === Terraria.Main.myPlayer) {
+                        self.KillMe(Terraria.DataStructures.PlayerDeathReason.ByOther(18), 10.0, 0, false);
+                    }
+                }
+
+                return;
+            }
+
+            while (self.lifeRegenCount <= -120) {
+                if (self.lifeRegenCount <= -480) {
+                    self.lifeRegenCount += 480;
+                    self.statLife -= 4;
+                    let rect = Microsoft.Xna.Framework.Rectangle.new();
+                    rect.X = self.position.X;
+                    rect.Y = self.position.Y;
+                    rect.Width = self.width;
+                    rect.Height = self.height;
+                    Terraria.CombatText['int NewText(Rectangle location, Color color, int amount, bool dramatic, bool dot)']
+                    (rect, Terraria.CombatText.LifeRegen, 4, false, true);
+                } else if (self.lifeRegenCount <= -360) {
+                    self.lifeRegenCount += 360;
+                    self.statLife -= 3;
+                    let rect = Microsoft.Xna.Framework.Rectangle.new();
+                    rect.X = self.position.X;
+                    rect.Y = self.position.Y;
+                    rect.Width = self.width;
+                    rect.Height = self.height;
+                    Terraria.CombatText['int NewText(Rectangle location, Color color, int amount, bool dramatic, bool dot)']
+                    (rect, Terraria.CombatText.LifeRegen, 3, false, true);
+                } else if (self.lifeRegenCount <= -240) {
+                    self.lifeRegenCount += 240;
+                    self.statLife -= 2;
+                    let rect = Microsoft.Xna.Framework.Rectangle.new();
+                    rect.X = self.position.X;
+                    rect.Y = self.position.Y;
+                    rect.Width = self.width;
+                    rect.Height = self.height;
+                    Terraria.CombatText['int NewText(Rectangle location, Color color, int amount, bool dramatic, bool dot)']
+                    (rect, Terraria.CombatText.LifeRegen, 2, false, true);
+                } else {
+                    self.lifeRegenCount += 120;
+                    self.statLife--;
+                    let rect = Microsoft.Xna.Framework.Rectangle.new();
+                    rect.X = self.position.X;
+                    rect.Y = self.position.Y;
+                    rect.Width = self.width;
+                    rect.Height = self.height;
+                    Terraria.CombatText['int NewText(Rectangle location, Color color, int amount, bool dramatic, bool dot)']
+                    (rect, Terraria.CombatText.LifeRegen, 1, false, true);
+                }
+
+                if (self.statLife <= 0 && self.whoAmI === Terraria.Main.myPlayer) {
+                    if (self.poisoned || self.venom) {
+                        self.KillMe(Terraria.DataStructures.PlayerDeathReason.ByOther(9), 10.0, 0, false);
+                    } else if (self.electrified) {
+                        self.KillMe(Terraria.DataStructures.PlayerDeathReason.ByOther(10), 10.0, 0, false);
+                    } else {
+                        self.KillMe(Terraria.DataStructures.PlayerDeathReason.ByOther(8), 10.0, 0, false);
+                    }
+                }
+            }
         });
 
         Terraria.Player.UpdateDead.hook((original, self) => {

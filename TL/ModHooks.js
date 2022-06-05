@@ -2166,6 +2166,14 @@ export class ModHooks {
             const result = original(self, damageSource, Damage, hitDirection, pvp, quiet, Crit, cooldownCounter);
             return result;
         });
+        
+        Terraria.Player.GetWeaponDamage.hook((original, self, sItem) => {
+            let result = original(self, sItem);
+            if (RequiemPlayer.undeadHunter && sItem.ranged) {
+                result += 2;
+            }
+            return result;
+        });
 
         ModHooks.isInitialized = true;
     }

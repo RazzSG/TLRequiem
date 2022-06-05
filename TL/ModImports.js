@@ -61,6 +61,11 @@ export const Terraria = {
     },
     Chat: {
         ChatCommandProcessor: new NativeClass('Terraria.Chat', 'ChatCommandProcessor')
+    },
+    Graphics: {
+        Shaders: {
+            GameShaders: new NativeClass('Terraria.Graphics.Shaders', 'GameShaders')
+        }
     }
 }
 

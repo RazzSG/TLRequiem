@@ -18,6 +18,8 @@ export class RequiemPlayer extends ModPlayer {
     static ankhOfLifeCooldown = 0
     static encased = false;
     static encasedTimer = 0;
+    static undeadHunter;
+    static undeadHunterCooldown = 0;
 
     constructor() {
         super();
@@ -32,10 +34,12 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.icyHeart = false;
         RequiemPlayer.painkiller = false;
         RequiemPlayer.ankhOfLife = false;
+        RequiemPlayer.undeadHunter = false;
     }
     
     UpdateDead() {
         RequiemPlayer.ankhOfLife = false;
+        RequiemPlayer.undeadHunter = false;
     }
 
     PostUpdateEquips() {
@@ -223,6 +227,24 @@ export class RequiemPlayer extends ModPlayer {
             }
         }
         
+        if (RequiemPlayer.undeadHunter) {
+            if (Terraria.Main.rand['int Next(int maxValue)'](10) === 0 && RequiemPlayer.undeadHunterCooldown === 0) {
+                modifier.damage = 0;
+                if (modifier.damage === 0) {
+                    Utils.giveIFrames(this.player, 45, true);
+                    RequiemPlayer.undeadHunterCooldown = Utils.secondsToFrames(15);
+                    for (let i = 0; i < 100; i++) {
+                        const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 235, 0, 0, 100, Microsoft.Xna.Framework.Graphics.Color.new(), 2);
+                        Terraria.Main.dust[dust].noGravity = true;
+                        Terraria.Main.dust[dust].position.X += Terraria.Main.rand['int Next(int minValue, int maxValue)'](-20, 21);
+                        Terraria.Main.dust[dust].position.Y += Terraria.Main.rand['int Next(int minValue, int maxValue)'](-20, 21);
+                        Terraria.Main.dust[dust].velocity = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Terraria.Main.dust[dust].velocity, 1.2);
+                        Terraria.Main.dust[dust].scale *= 1 + Terraria.Main.rand['int Next(int maxValue)'](40) * 0.01;
+                    }
+                }
+            }
+        }
+        
         return true;
     }
     
@@ -246,6 +268,11 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.ankhOfLifeCooldown--;
         if (RequiemPlayer.ankhOfLifeCooldown < 0) {
             RequiemPlayer.ankhOfLifeCooldown = 0;
+        }
+        
+        RequiemPlayer.undeadHunterCooldown--;
+        if (RequiemPlayer.undeadHunterCooldown < 0) {
+            RequiemPlayer.undeadHunterCooldown = 0;
         }
         
         player.statManaMax2 += (RequiemPlayer.ankhOfLife ? 50 : 0);

@@ -20,6 +20,7 @@ export class RequiemPlayer extends ModPlayer {
     static encasedTimer = 0;
     static undeadHunter;
     static undeadHunterCooldown = 0;
+    static yagasHead;
 
     constructor() {
         super();
@@ -35,6 +36,7 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.painkiller = false;
         RequiemPlayer.ankhOfLife = false;
         RequiemPlayer.undeadHunter = false;
+        RequiemPlayer.yagasHead = false;
     }
     
     UpdateDead() {
@@ -59,6 +61,15 @@ export class RequiemPlayer extends ModPlayer {
         
         if (RequiemPlayer.oilMinion) {
             this.player.maxMinions += 2;
+        }
+        
+        if (RequiemPlayer.yagasHead) {
+            for (let i = 0; i < 1000; i++) {
+                const proj = Terraria.Main.projectile[i];
+                if (proj.active && proj.owner === this.player.whoAmI && proj.minion && proj.type !== 623) {
+                    this.player.minionDamage += 0.05 * proj.minionSlots;
+                }
+            }
         }
         
         if (RequiemPlayer.defianceBanner) {

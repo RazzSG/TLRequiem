@@ -21,6 +21,10 @@ import {ArtemisSoul} from "../Content/Items/Accessories/ArtemisSoul.js";
 import {IcyHeart} from "../Content/Items/Accessories/IcyHeart.js";
 import {Painkiller} from "../Content/Items/Accessories/Painkiller.js";
 import {AnkhOfLife} from "../Content/Items/Accessories/AnkhOfLife.js";
+import {UndeadHunterHood} from "../Content/Items/Armors/UndeadHunterHood.js";
+import {UndeadHunterShirt} from "../Content/Items/Armors/UndeadHunterShirt.js";
+import {UndeadHunterPants} from "../Content/Items/Armors/UndeadHunterPants.js";
+import {YagasHead} from "../Content/Items/Accessories/YagasHead.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
@@ -43,4 +47,8 @@ export function initializeContent() {
     ModItem.register(IcyHeart);
     ModItem.register(Painkiller);
     ModItem.register(AnkhOfLife);
+    ModItem.register(UndeadHunterHood);
+    ModItem.register(UndeadHunterShirt);
+    ModItem.register(UndeadHunterPants);
+    ModItem.register(YagasHead);
 }

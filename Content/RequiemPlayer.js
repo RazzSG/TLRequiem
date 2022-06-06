@@ -21,6 +21,7 @@ export class RequiemPlayer extends ModPlayer {
     static undeadHunter;
     static undeadHunterCooldown = 0;
     static yagasHead;
+    static ringOfReplenishment;
 
     constructor() {
         super();
@@ -37,6 +38,7 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.ankhOfLife = false;
         RequiemPlayer.undeadHunter = false;
         RequiemPlayer.yagasHead = false;
+        RequiemPlayer.ringOfReplenishment = false;
     }
     
     UpdateDead() {

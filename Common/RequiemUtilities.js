@@ -57,4 +57,22 @@ export function giveIFrames(player, frames, blink = false) {
     }
     return true;
 }
+
+export function healLife(player, healAmount, healOverMax = true) {
+    let result = 0;
+    if ((!healOverMax && player.statLife >= player.statLifeMax2) || healAmount <= 0) {
+        return result;
+    }
+    result = healAmount;
+    if (!healOverMax && player.statLifeMax2 < healAmount + player.statLife) {
+        result = player.statLifeMax2 - player.statLife;
+    }
+    player.statLife += result;
+    if (healOverMax && player.statLife > player.statLifeMax2) {
+        player.statLife = player.statLifeMax2;
+    }
+    if (player.whoAmI === Terraria.Main.myPlayer) {
+        player.HealEffect(result, true);
+    }
+    return result;
 }

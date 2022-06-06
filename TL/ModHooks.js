@@ -17,8 +17,11 @@ import { ItemLoader } from "./Loaders/ItemLoader.js";
 import { CombinedLoader } from "./Loaders/CombinedLoader.js";
 
 import { PlayerLoader } from "./Loaders/PlayerLoader.js";
+
 import { NPCLoader } from "./Loaders/NPCLoader.js";
+
 import {RequiemPlayer} from "../Content/RequiemPlayer.js";
+import {StellarPendant} from "../Content/Items/Accessories/StellarPendant.js";
 
 export class ModHooks {
 	static OnHitTemp = [];
@@ -34,6 +37,9 @@ export class ModHooks {
             const projectile = ModProjectile.getModProjectile(type);
             projectile?.SetDefaults();
             Object.assign(self, projectile?.Projectile);
+            if (self.type === 92 || self.type === 9) {
+                self.timeLeft = 120;
+            }
         });
 
         Terraria.WorldGen.KillTile.hook((original, i, j, fail, effectOnly, noItem) => {
@@ -2173,6 +2179,13 @@ export class ModHooks {
                 result += 2;
             }
             return result;
+        });
+        
+        Terraria.Projectile.AI.hook((original, self) => {
+           original(self);
+            if (StellarPendant.active && (self.type === 92 || self.type === 9) && Terraria.Main.LocalPlayer.HeldItem.type !== 65) {
+               self.tileCollide = false;
+           }
         });
 
         ModHooks.isInitialized = true;

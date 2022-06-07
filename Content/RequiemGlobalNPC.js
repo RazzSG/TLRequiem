@@ -18,8 +18,8 @@ export class RequiemGlobalNPC extends GlobalNPC {
     }
     
     OnKill(npc) {
-        if (RequiemPlayer.ringOfReplenishment && Terraria.Main.rand['int Next(int maxValue)'](3) === 0) {
-            Utils.healLife(Terraria.Main.myPlayer, Terraria.Main.rand['int Next(int minValue, int maxValue)'](1, 4));
+        if (npc.playerInteraction[Terraria.Main.myPlayer] && RequiemPlayer.ringOfReplenishment && Terraria.Main.rand['int Next(int maxValue)'](3) === 0) {
+            Utils.healLife(Terraria.Main.LocalPlayer, Terraria.Main.rand['int Next(int minValue, int maxValue)'](1, 4));
         }
     }
 }

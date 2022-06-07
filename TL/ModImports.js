@@ -15,6 +15,7 @@ export const Terraria = {
     Chest: new NativeClass('Terraria', 'Chest'),
     Dust: new NativeClass('Terraria', 'Dust'),
     CombatText: new NativeClass('Terraria', 'CombatText'),
+    Collision: new NativeClass('Terraria', 'Collision'),
     ID: {
         NPCID: new NativeClass('Terraria.ID', 'NPCID'),
         SoundID: new NativeClass('Terraria.ID', 'SoundID'),

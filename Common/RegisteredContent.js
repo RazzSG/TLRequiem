@@ -27,6 +27,7 @@ import {UndeadHunterPants} from "../Content/Items/Armors/UndeadHunterPants.js";
 import {YagasHead} from "../Content/Items/Accessories/YagasHead.js";
 import {StellarPendant} from "../Content/Items/Accessories/StellarPendant.js";
 import {RingOfReplenishment} from "../Content/Items/Accessories/RingOfReplenishment.js";
+import {ElectrumBow} from "../Content/Items/Weapons/Ranged/ElectrumBow.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
@@ -55,4 +56,5 @@ export function initializeContent() {
     ModItem.register(YagasHead);
     ModItem.register(StellarPendant);
     ModItem.register(RingOfReplenishment);
+    ModItem.register(ElectrumBow);
 }

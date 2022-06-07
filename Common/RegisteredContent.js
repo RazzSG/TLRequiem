@@ -28,6 +28,7 @@ import {YagasHead} from "../Content/Items/Accessories/YagasHead.js";
 import {StellarPendant} from "../Content/Items/Accessories/StellarPendant.js";
 import {RingOfReplenishment} from "../Content/Items/Accessories/RingOfReplenishment.js";
 import {ElectrumBow} from "../Content/Items/Weapons/Ranged/ElectrumBow.js";
+import {GoldenScarab} from "../Content/Items/Accessories/GoldenScarab.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
@@ -57,4 +58,5 @@ export function initializeContent() {
     ModItem.register(StellarPendant);
     ModItem.register(RingOfReplenishment);
     ModItem.register(ElectrumBow);
+    ModItem.register(GoldenScarab);
 }

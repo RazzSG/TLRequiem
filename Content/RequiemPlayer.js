@@ -22,6 +22,7 @@ export class RequiemPlayer extends ModPlayer {
     static undeadHunterCooldown = 0;
     static yagasHead;
     static ringOfReplenishment;
+    static goldenScarab;
 
     constructor() {
         super();
@@ -39,6 +40,7 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.undeadHunter = false;
         RequiemPlayer.yagasHead = false;
         RequiemPlayer.ringOfReplenishment = false;
+        RequiemPlayer.goldenScarab = false;
     }
     
     UpdateDead() {
@@ -195,6 +197,22 @@ export class RequiemPlayer extends ModPlayer {
             }
         }
     }
+    
+    OnHitNPC(item, target, damage, knockback, crit) {
+        if (RequiemPlayer.goldenScarab && Utils.IsNPCHostile(target)) {
+            target.AddBuff(72, 120, false);
+            Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 71, 1, false, 0, false, false);
+            if (Terraria.Main.rand['int Next(int maxValue)'](10) === 0) {
+                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 72, 1, false, 0, false, false);
+            }
+            if (Terraria.Main.rand['int Next(int maxValue)'](100) === 0) {
+                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 73, 1, false, 0, false, false);
+            }
+            if (Terraria.Main.rand['int Next(int maxValue)'](1000) === 0) {
+                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 74, 1, false, 0, false, false);
+            }
+        }
+    }
 
     OnHitNPCWithProj(proj, target) {
         if (Utils.isSummon(proj)) {
@@ -209,6 +227,20 @@ export class RequiemPlayer extends ModPlayer {
             if (RequiemPlayer.oilMinion) {
                 if (Terraria.Main.rand['int Next(int maxValue)'](2) === 0) {
                     target.AddBuff(204, 60 * Terraria.Main.rand['int Next(int minValue, int maxValue)'](4, 10), false);
+                }
+            }
+
+            if (RequiemPlayer.goldenScarab  && Utils.IsNPCHostile(target)) {
+                target.AddBuff(72, 120, false);
+                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 71, 1, false, 0, false, false);
+                if (Terraria.Main.rand['int Next(int maxValue)'](10) === 0) {
+                    Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 72, 1, false, 0, false, false);
+                }
+                if (Terraria.Main.rand['int Next(int maxValue)'](100) === 0) {
+                    Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 73, 1, false, 0, false, false);
+                }
+                if (Terraria.Main.rand['int Next(int maxValue)'](1000) === 0) {
+                    Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 74, 1, false, 0, false, false);
                 }
             }
         }

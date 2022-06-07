@@ -76,3 +76,7 @@ export function healLife(player, healAmount, healOverMax = true) {
     }
     return result;
 }
+
+export function IsNPCHostile(npc) {
+    return !npc.friendly && npc.lifeMax > 5 && npc.chaseable && !npc.dontTakeDamage && !npc.immortal;
+}

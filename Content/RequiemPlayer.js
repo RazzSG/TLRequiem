@@ -345,6 +345,10 @@ export class RequiemPlayer extends ModPlayer {
                 RequiemPlayer.encased = false;
             }
         }
+        
+        if (RequiemPlayer.goldenScarab) {
+            player.luck += 0.1;
+        }
     }
 
     static Limits(player) {

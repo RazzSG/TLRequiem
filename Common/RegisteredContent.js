@@ -29,6 +29,7 @@ import {StellarPendant} from "../Content/Items/Accessories/StellarPendant.js";
 import {RingOfReplenishment} from "../Content/Items/Accessories/RingOfReplenishment.js";
 import {ElectrumBow} from "../Content/Items/Weapons/Ranged/ElectrumBow.js";
 import {GoldenScarab} from "../Content/Items/Accessories/GoldenScarab.js";
+import {FaerieRing} from "../Content/Items/Accessories/FaerieRing.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
@@ -59,4 +60,5 @@ export function initializeContent() {
     ModItem.register(RingOfReplenishment);
     ModItem.register(ElectrumBow);
     ModItem.register(GoldenScarab);
+    ModItem.register(FaerieRing);
 }

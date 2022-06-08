@@ -23,6 +23,7 @@ export class RequiemPlayer extends ModPlayer {
     static yagasHead;
     static ringOfReplenishment;
     static goldenScarab;
+    static faerieRing;
 
     constructor() {
         super();
@@ -41,6 +42,7 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.yagasHead = false;
         RequiemPlayer.ringOfReplenishment = false;
         RequiemPlayer.goldenScarab = false;
+        RequiemPlayer.faerieRing = false;
     }
     
     UpdateDead() {
@@ -196,6 +198,17 @@ export class RequiemPlayer extends ModPlayer {
                 }
             }
         }
+        
+        if (RequiemPlayer.faerieRing) {
+            this.player.meleeSpeed += 0.12;
+            this.player.maxMinions += 2;
+            Utils.allDamageBoost(this.player, 0.12);
+            this.player.minionKB += 1.2;
+            this.player.pickSpeed -= 0.15;
+            if (Terraria.Main.eclipse || !Terraria.Main.dayTime) {
+                this.player.statDefense += 15;
+            }
+        }
     }
     
     OnHitNPC(item, target, damage, knockback, crit) {
@@ -261,6 +274,11 @@ export class RequiemPlayer extends ModPlayer {
                 this.player.lifeRegen += 4;
             }
         }
+        
+        if (RequiemPlayer.faerieRing && (Terraria.Main.eclipse || Terraria.Main.dayTime)) {
+            this.player.lifeRegen += 3;
+        }
+    }
     }
 
     PreHurt(pvp, quiet, modifier) {

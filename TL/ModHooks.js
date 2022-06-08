@@ -2187,6 +2187,49 @@ export class ModHooks {
                self.tileCollide = false;
            }
         });
+        
+        Terraria.GUIPlayerCreateMenu.SetupStartingItems.hook((original) => {
+            original();
+            
+            let inventorySlot = 0;
+            const flag = Terraria.WorldGen.CopperTierOre == 7;
+            const player = Terraria.Main.PendingPlayer;
+            if (player.difficulty !== 3) {
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](flag ? 3507 : 3501);
+                player.inventory[inventorySlot++].Prefix(-1);
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](3509);
+                player.inventory[inventorySlot++].Prefix(-1);
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](3506);
+                player.inventory[inventorySlot++].Prefix(-1);
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](flag ? 3504 : 3498);
+                player.inventory[inventorySlot++].Prefix(-1);
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](40);
+                player.inventory[inventorySlot++].stack = 100;
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](3069);
+                player.inventory[inventorySlot++].Prefix(-1);
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](4281);
+                player.inventory[inventorySlot++].Prefix(-1);
+                player.inventory[inventorySlot++]['void SetDefaults(int Type)'](109);
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](flag ? 3505 : 3499);
+                player.inventory[inventorySlot++].Prefix(-1);
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](166);
+                player.inventory[inventorySlot++].stack = 10;
+                player.inventory[inventorySlot++]['void SetDefaults(int Type)'](2322);
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](296);
+                player.inventory[inventorySlot++].stack = 2;
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](290);
+                player.inventory[inventorySlot++].stack = 3;
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](291);
+                player.inventory[inventorySlot++].stack = 2;
+                player.inventory[inventorySlot++]['void SetDefaults(int Type)'](298);
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](2350);
+                player.inventory[inventorySlot++].stack = 3;
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](8);
+                player.inventory[inventorySlot++].stack = 25;
+                player.inventory[inventorySlot]['void SetDefaults(int Type)'](48);
+                player.inventory[inventorySlot++].stack = 3;
+            }
+        });
 
         ModHooks.isInitialized = true;
     }

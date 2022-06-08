@@ -16,6 +16,7 @@ export const Terraria = {
     Dust: new NativeClass('Terraria', 'Dust'),
     CombatText: new NativeClass('Terraria', 'CombatText'),
     Collision: new NativeClass('Terraria', 'Collision'),
+    GUIPlayerCreateMenu: new NativeClass('', 'GUIPlayerCreateMenu'),
     ID: {
         NPCID: new NativeClass('Terraria.ID', 'NPCID'),
         SoundID: new NativeClass('Terraria.ID', 'SoundID'),
@@ -50,7 +51,8 @@ export const Terraria = {
             CommonCode: new NativeClass('Terraria.GameContent.ItemDropRules', 'CommonCode')
         },
         Creative: {
-            CreativeItemSacrificesCatalog: new NativeClass('Terraria.GameContent.Creative', 'CreativeItemSacrificesCatalog')
+            CreativeItemSacrificesCatalog: new NativeClass('Terraria.GameContent.Creative', 'CreativeItemSacrificesCatalog'),
+            ItemsSacrificedUnlocksTracker: new NativeClass('Terraria.GameContent.Creative', 'ItemsSacrificedUnlocksTracker')
         }
     },
     DataStructures: {

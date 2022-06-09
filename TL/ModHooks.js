@@ -2230,6 +2230,12 @@ export class ModHooks {
                 player.inventory[inventorySlot++].stack = 3;
             }
         });
+        
+        Terraria.Player.OpenBossBag.hook((original, self, type) => {
+            ItemLoader.OpenVanillaBag("bossBag", self, type);
+            
+            original(self, type); 
+        });
 
         ModHooks.isInitialized = true;
     }

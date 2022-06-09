@@ -19,4 +19,7 @@ export class GlobalItem {
 
     UpdateAccessory(item, player) {
     }
+
+    OpenVanillaBag(context, player, arg) {
+    }
 }

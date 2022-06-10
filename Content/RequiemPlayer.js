@@ -24,6 +24,7 @@ export class RequiemPlayer extends ModPlayer {
     static ringOfReplenishment;
     static goldenScarab;
     static faerieRing;
+    static warriorBracer;
 
     constructor() {
         super();
@@ -43,6 +44,7 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.ringOfReplenishment = false;
         RequiemPlayer.goldenScarab = false;
         RequiemPlayer.faerieRing = false;
+        RequiemPlayer.warriorBracer = false;
     }
     
     UpdateDead() {
@@ -225,6 +227,10 @@ export class RequiemPlayer extends ModPlayer {
                 Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 74, 1, false, 0, false, false);
             }
         }
+        
+        if (RequiemPlayer.warriorBracer && Terraria.Main.rand['int Next(int maxValue)'](11) === 0) {
+            target.StrikeNPC(item.damage, 0, 0, crit, false, false);
+        }
     }
 
     OnHitNPCWithProj(proj, target) {
@@ -242,20 +248,26 @@ export class RequiemPlayer extends ModPlayer {
                     target.AddBuff(204, 60 * Terraria.Main.rand['int Next(int minValue, int maxValue)'](4, 10), false);
                 }
             }
+        }
 
-            if (RequiemPlayer.goldenScarab  && Utils.IsNPCHostile(target)) {
-                target.AddBuff(72, 120, false);
-                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 71, 1, false, 0, false, false);
-                if (Terraria.Main.rand['int Next(int maxValue)'](10) === 0) {
-                    Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 72, 1, false, 0, false, false);
-                }
-                if (Terraria.Main.rand['int Next(int maxValue)'](100) === 0) {
-                    Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 73, 1, false, 0, false, false);
-                }
-                if (Terraria.Main.rand['int Next(int maxValue)'](1000) === 0) {
-                    Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 74, 1, false, 0, false, false);
-                }
+        if (RequiemPlayer.goldenScarab  && Utils.IsNPCHostile(target)) {
+            target.AddBuff(72, 120, false);
+            Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 71, 1, false, 0, false, false);
+            if (Terraria.Main.rand['int Next(int maxValue)'](10) === 0) {
+                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 72, 1, false, 0, false, false);
             }
+            if (Terraria.Main.rand['int Next(int maxValue)'](100) === 0) {
+                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 73, 1, false, 0, false, false);
+            }
+            if (Terraria.Main.rand['int Next(int maxValue)'](1000) === 0) {
+                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 74, 1, false, 0, false, false);
+            }
+        }
+        
+        if (RequiemPlayer.warriorBracer && proj.melee && Terraria.Main.rand['int Next(int maxValue)'](11) === 0) {
+            // Полурабочий костыль крит. шанса
+            const crit = Terraria.Main.rand['int Next(int minValue, int maxValue)'](1, 101) < Terraria.Main.player[proj.owner].meleeCrit;
+            target.StrikeNPC(proj.damage, 0, 0, crit, false, false);
         }
     }
     

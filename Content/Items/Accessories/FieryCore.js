@@ -6,7 +6,7 @@ export class FieryCore extends ModItem {
     SetDefaults() {
         this.Item.value = Terraria.Item.buyPrice(0, 50, 0, 0);
         this.Item.accessory = true;
-        this.Item.expert = true;
+        this.Item.master = true;
     }
     
     UpdateAccessory(player) {

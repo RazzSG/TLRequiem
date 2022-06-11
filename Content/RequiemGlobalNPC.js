@@ -197,7 +197,7 @@ export class RequiemGlobalNPC extends GlobalNPC {
             shop.item[nextSlot]['void SetDefaults(int Type)'](113);
             shop.item[nextSlot].value = Terraria.Item.buyPrice(0, 5, 0, 0);
             nextSlot++;
-            if (Terraria.Main.hardMode && Terraria.Main.LocalPlayer.ZoneHoly) {
+            if (Terraria.Main.hardMode && Terraria.Main.LocalPlayer.ZoneHallow) {
                 shop.item[nextSlot]['void SetDefaults(int Type)'](1326);
                 shop.item[nextSlot].value = Terraria.Item.buyPrice(20, 0, 0, 0);
                 nextSlot++;

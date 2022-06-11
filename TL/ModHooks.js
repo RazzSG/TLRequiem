@@ -910,7 +910,9 @@ export class ModHooks {
 
         Terraria.Item['void SetDefaults(int Type, bool noMatCheck)'].hook((original, self, type, noMatCheck) => {
             if (type < ItemLoader.MAX_VANILLA_ID) {
-                return original(self,type, noMatCheck);
+                original(self,type, noMatCheck);
+                ItemLoader.SetDefaults(self);
+                return;
             }
 
             self.tooltipContext = -1;

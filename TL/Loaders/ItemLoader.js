@@ -535,4 +535,10 @@ export class ItemLoader {
             globalItem.OpenVanillaBag(context, player, arg);
         }
     }
+    
+    static SetDefaults(item) {
+        for (let globalItem of GlobalItem.RegisteredItem) {
+            globalItem.SetDefaults(item);
+        }
+    }
 }

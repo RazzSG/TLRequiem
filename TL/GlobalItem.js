@@ -11,6 +11,9 @@ export class GlobalItem {
         ModHooks.initialize();
     }
 
+    SetDefaults(item) {
+    }
+    
     UpdateInventory(item, player) {
     }
 

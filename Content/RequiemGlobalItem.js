@@ -32,6 +32,14 @@ export class RequiemGlobalItem extends GlobalItem {
             case 557:
             case 4961:
             case 3601:
+            case 3747:
+            case 4271:
+            case 361:
+            case 602:
+            case 2767:
+            case 1315:
+            case 1844:
+            case 1958:
                 item.consumable = false;
         }
     }

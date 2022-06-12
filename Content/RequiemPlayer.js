@@ -25,6 +25,9 @@ export class RequiemPlayer extends ModPlayer {
     static goldenScarab;
     static faerieRing;
     static warriorBracer;
+    static brawlerGloves;
+    static brawlerGlovesStack = 0;
+    static brawlerGlovesCooldown = 0;
 
     constructor() {
         super();
@@ -45,6 +48,7 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.goldenScarab = false;
         RequiemPlayer.faerieRing = false;
         RequiemPlayer.warriorBracer = false;
+        RequiemPlayer.brawlerGloves = false;
     }
     
     UpdateDead() {
@@ -231,6 +235,11 @@ export class RequiemPlayer extends ModPlayer {
         if (RequiemPlayer.warriorBracer && Terraria.Main.rand['int Next(int maxValue)'](11) === 0) {
             target.StrikeNPC(item.damage, 0, 0, crit, false, false);
         }
+        
+        if (RequiemPlayer.brawlerGloves && RequiemPlayer.brawlerGlovesStack < 150 && RequiemPlayer.brawlerGlovesCooldown <= 0) {
+            RequiemPlayer.brawlerGlovesStack++;
+            RequiemPlayer.brawlerGlovesCooldown = 30;
+        }
     }
 
     OnHitNPCWithProj(proj, target) {
@@ -350,6 +359,10 @@ export class RequiemPlayer extends ModPlayer {
             RequiemPlayer.undeadHunterCooldown = 0;
         }
         
+        RequiemPlayer.brawlerGlovesCooldown--;
+        if (RequiemPlayer.brawlerGlovesCooldown < 0) {
+            RequiemPlayer.brawlerGlovesCooldown = 0;
+        }
         player.statManaMax2 += (RequiemPlayer.ankhOfLife ? 50 : 0);
         
         if (RequiemPlayer.ankhOfLife) {
@@ -378,6 +391,11 @@ export class RequiemPlayer extends ModPlayer {
         
         if (RequiemPlayer.goldenScarab) {
             player.luck += 0.1;
+        }
+        
+        if (RequiemPlayer.brawlerGloves) {
+            const num = 0.15;
+            player.meleeDamage += RequiemPlayer.brawlerGlovesStack / 150 * num;
         }
     }
 

@@ -28,6 +28,8 @@ export class RequiemPlayer extends ModPlayer {
     static brawlerGloves;
     static brawlerGlovesStack = 0;
     static brawlerGlovesCooldown = 0;
+    static featherCrystal;
+    static featherCrystalCooldown = 0;
 
     constructor() {
         super();
@@ -49,6 +51,7 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.faerieRing = false;
         RequiemPlayer.warriorBracer = false;
         RequiemPlayer.brawlerGloves = false;
+        RequiemPlayer.featherCrystal = false;
     }
     
     UpdateDead() {
@@ -363,6 +366,12 @@ export class RequiemPlayer extends ModPlayer {
         if (RequiemPlayer.brawlerGlovesCooldown < 0) {
             RequiemPlayer.brawlerGlovesCooldown = 0;
         }
+        
+        RequiemPlayer.featherCrystalCooldown--;
+        if (RequiemPlayer.featherCrystalCooldown < 0) {
+            RequiemPlayer.featherCrystalCooldown = 0;
+        }
+
         player.statManaMax2 += (RequiemPlayer.ankhOfLife ? 50 : 0);
         
         if (RequiemPlayer.ankhOfLife) {

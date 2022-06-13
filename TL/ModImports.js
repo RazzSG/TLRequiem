@@ -29,7 +29,8 @@ export const Terraria = {
         MountID: new NativeClass('Terraria.ID', 'MountID'),
         ItemUseStyleID: new NativeClass('Terraria.ID', 'ItemUseStyleID'),
         ItemHoldStyleID: new NativeClass('Terraria.ID', 'ItemHoldStyleID'),
-        PrefixID: new NativeClass('Terraria.ID', 'PrefixID')
+        PrefixID: new NativeClass('Terraria.ID', 'PrefixID'),
+        CustomCurrencyID: new NativeClass('Terraria.ID', 'CustomCurrencyID'),
     },
     Localization: {
         Language: new NativeClass('Terraria.Localization', 'Language'),
@@ -53,6 +54,9 @@ export const Terraria = {
         Creative: {
             CreativeItemSacrificesCatalog: new NativeClass('Terraria.GameContent.Creative', 'CreativeItemSacrificesCatalog'),
             ItemsSacrificedUnlocksTracker: new NativeClass('Terraria.GameContent.Creative', 'ItemsSacrificedUnlocksTracker')
+        },
+        Events: {
+            Sandstorm: new NativeClass('Terraria.GameContent.Events', 'Sandstorm')
         }
     },
     DataStructures: {
@@ -97,5 +101,6 @@ export const ReLogic = {
 
 export const System = {
     Nullable: new NativeClass('System', 'Nullable`1'),
+    Int32: new NativeClass('System', 'Int32'),
     Math: new NativeClass('System', 'Math')
 }

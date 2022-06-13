@@ -3,6 +3,8 @@ import {RequiemPlayer} from "../Content/RequiemPlayer.js";
 import {ModItem} from "../TL/ModItem.js";
 import {GlobalItem} from "../TL/GlobalItem.js";
 import {RequiemGlobalItem} from "../Content/RequiemGlobalItem.js";
+import {GlobalProjectile} from "../TL/GlobalProjectile.js";
+import {RequiemGlobalProjectile} from "../Content/RequiemGlobalProjectile.js";
 import {VialOfGraveEarth} from "../Content/Items/Accessories/VialOfGraveEarth.js";
 import {FireAmulet} from "../Content/Items/Accessories/FireAmulet.js";
 import {ShadowflameSkull} from "../Content/Items/Accessories/ShadowflameSkull.js";
@@ -37,11 +39,13 @@ import {PocketRainCloud} from "../Content/Items/Tools/ClimateChange/PocketRainCl
 import {BrawlersGloves} from "../Content/Items/Accessories/BrawlersGloves.js";
 import {ElectrumBar} from "../Content/Items/Materials/ElectrumBar.js";
 import {GlitteringDust} from "../Content/Items/Materials/GlitteringDust.js";
+import {FeatherCrystal} from "../Content/Items/Accessories/FeatherCrystal.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
     GlobalNPC.register(RequiemGlobalNPC);
     GlobalItem.register(RequiemGlobalItem);
+    GlobalProjectile.register(RequiemGlobalProjectile);
 
     initializeAccessories();
     initializeArmors();
@@ -70,6 +74,7 @@ function initializeAccessories() {
     ModItem.register(FieryCore);
     ModItem.register(WarriorsBracer);
     ModItem.register(BrawlersGloves);
+    ModItem.register(FeatherCrystal);
 }
 
 function initializeArmors() {

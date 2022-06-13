@@ -22,6 +22,7 @@ import { NPCLoader } from "./Loaders/NPCLoader.js";
 
 import {RequiemPlayer} from "../Content/RequiemPlayer.js";
 import {StellarPendant} from "../Content/Items/Accessories/StellarPendant.js";
+import {ProjectileLoader} from "./Loaders/ProjectileLoader.js";
 
 export class ModHooks {
 	static OnHitTemp = [];
@@ -2337,6 +2338,12 @@ export class ModHooks {
             ItemLoader.OpenVanillaBag("bossBag", self, type);
             
             original(self, type); 
+        });
+        
+        Terraria.Projectile.Kill.hook((original, self) => {
+           original(self); 
+           
+           ProjectileLoader.Kill(self);
         });
 
         ModHooks.isInitialized = true;

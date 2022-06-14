@@ -1,6 +1,7 @@
 ﻿import {ModItem} from "../../../TL/ModItem.js";
 import {Microsoft, Terraria} from "../../../TL/ModImports.js";
-import {allDamageBoost, secondsToFrames} from "../../../Common/RequiemUtilities.js";
+import {secondsToFrames} from "../../../Common/RequiemUtilities.js";
+import {RequiemPlayer} from "../../RequiemPlayer.js";
 
 export class FieryCore extends ModItem {
     SetDefaults() {
@@ -11,7 +12,7 @@ export class FieryCore extends ModItem {
     
     UpdateAccessory(player) {
         if (player.ZoneUnderworldHeight) {
-            allDamageBoost(player, 0.1);
+            RequiemPlayer.allDamage += 0.1;
         }
         player.buffImmune[24] = true;
         player.buffImmune[67] = true;

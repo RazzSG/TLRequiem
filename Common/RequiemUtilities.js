@@ -20,19 +20,6 @@ export function anyBossNPCs(checkForMechs = false) {
     }
 }
 
-export function allCritBoost(player, boost) {
-    player.meleeCrit += boost;
-    player.rangedCrit += boost;
-    player.magicCrit += boost;
-}
-
-export function allDamageBoost(player, boost) {
-    player.meleeDamage += boost;
-    player.magicDamage += boost;
-    player.rangedDamage += boost;
-    player.minionDamage += boost;
-}
-
 export function secondsToFrames(seconds) {
     return seconds * 60;
 }

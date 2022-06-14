@@ -1,6 +1,7 @@
 ﻿import {ModPlayer} from "../TL/ModPlayer.js";
 import * as Utils from "../Common/RequiemUtilities.js";
 import {Microsoft, System, Terraria} from "../TL/ModImports.js";
+import {ModLocalization} from "../TL/ModLocalization.js";
 
 export class RequiemPlayer extends ModPlayer {
     static fireAmulet;
@@ -30,6 +31,14 @@ export class RequiemPlayer extends ModPlayer {
     static brawlerGlovesCooldown = 0;
     static featherCrystal;
     static featherCrystalCooldown = 0;
+    static manaEqualizer;
+    static manaEqualizerVolatilityStack = 0;
+    static manaEqualizerVolatilityTimer = 0;
+    static allCrit;
+    static allDamage;
+    static attackSpeed;
+    static castingSpeed;
+    static firingSpeed;
 
     constructor() {
         super();
@@ -52,11 +61,18 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.warriorBracer = false;
         RequiemPlayer.brawlerGloves = false;
         RequiemPlayer.featherCrystal = false;
+        RequiemPlayer.manaEqualizer = false;
+        RequiemPlayer.allCrit = 0;
+        RequiemPlayer.allDamage = 0;
+        RequiemPlayer.attackSpeed = 0;
+        RequiemPlayer.castingSpeed = 0;
+        RequiemPlayer.firingSpeed = 0;
     }
     
     UpdateDead() {
         RequiemPlayer.ankhOfLife = false;
         RequiemPlayer.undeadHunter = false;
+        RequiemPlayer.manaEqualizerVolatilityStack = 0;
     }
 
     PostUpdateEquips() {
@@ -154,15 +170,15 @@ export class RequiemPlayer extends ModPlayer {
                     case 163: {
                         this.player.headcovered = false;
                         this.player.statDefense += 50;
-                        Utils.allDamageBoost(this.player, 0.5);
-                        Utils.allCritBoost(this.player, 25);
+                        RequiemPlayer.allDamage += 0.5;
+                        RequiemPlayer.allCrit += 25;
                         break;
                     }
                     case 80: {
                         this.player.blackout = false;
                         this.player.statDefense += 30;
-                        Utils.allDamageBoost(this.player, 0.25);
-                        Utils.allCritBoost(this.player, 10);
+                        RequiemPlayer.allDamage += 0.25;
+                        RequiemPlayer.allCrit += 10;
                         break;
                     }
                     case 69: {
@@ -193,15 +209,15 @@ export class RequiemPlayer extends ModPlayer {
                     case 31: {
                         this.player.confused = false;
                         this.player.statDefense += 30;
-                        Utils.allDamageBoost(this.player, 0.25);
-                        Utils.allCritBoost(this.player, 10);
+                        RequiemPlayer.allDamage += 0.25;
+                        RequiemPlayer.allCrit += 10;
                         break;
                     }
                     case 22: {
                         this.player.blind = false;
                         this.player.statDefense += 15;
-                        Utils.allDamageBoost(this.player, 0.1);
-                        Utils.allCritBoost(this.player, 5);
+                        RequiemPlayer.allDamage += 0.1;
+                        RequiemPlayer.allCrit += 5;
                         break;
                     }
                 }
@@ -211,13 +227,72 @@ export class RequiemPlayer extends ModPlayer {
         if (RequiemPlayer.faerieRing) {
             this.player.meleeSpeed += 0.12;
             this.player.maxMinions += 2;
-            Utils.allDamageBoost(this.player, 0.12);
+            RequiemPlayer.allDamage += 0.12;
             this.player.minionKB += 1.2;
             this.player.pickSpeed -= 0.15;
             if (Terraria.Main.eclipse || !Terraria.Main.dayTime) {
                 this.player.statDefense += 15;
             }
         }
+        
+        if (RequiemPlayer.manaEqualizer) {
+            if (this.player.statMana > this.player.statManaMax2 * 0.6) {
+                this.player.magicDamage += 0.35;
+                this.player.magicCrit += 10;
+            } else if (this.player.statMana < this.player.statManaMax2 * 0.2) {
+                for (let i = 0; i < 8; i++) {
+                    const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 132, 0, 0, 0, Microsoft.Xna.Framework.Graphics.Color.new(), 1);
+                    Terraria.Main.dust[dust].velocity = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Terraria.Main.dust[dust].velocity, Terraria.Utils['float NextFloat(UnifiedRandom r)'](Terraria.Main.rand) * 2 + 0.5);
+                    Terraria.Main.dust[dust].scale = Terraria.Utils['float NextFloat(UnifiedRandom r)'](Terraria.Main.rand) + 1.2;
+                    Terraria.Main.dust[dust].noGravity = true;
+                }
+                RequiemPlayer.manaEqualizerVolatilityStack += 1;
+                const color = Microsoft.Xna.Framework.Graphics.Color.new();
+                color.R = 245;
+                color.G = 255;
+                color.B = 142;
+                Terraria.CombatText['int NewText(Rectangle location, Color color, int amount, bool dramatic, bool dot)'](this.player.getRect(), color, RequiemPlayer.manaEqualizerVolatilityStack, false, false);
+                this.player.statMana += this.player.statManaMax2 * 0.6;
+                Terraria.Audio.SoundEngine['void PlaySound(int type, Vector2 position, int style)'](4, this.player.position, 58);
+            }
+        }
+        if (RequiemPlayer.manaEqualizerVolatilityStack > 0) {
+            RequiemPlayer.castingSpeed += RequiemPlayer.manaEqualizerVolatilityStack * 0.03333333333;
+            RequiemPlayer.manaEqualizerVolatilityTimer++;
+            if (RequiemPlayer.manaEqualizerVolatilityTimer > Utils.secondsToFrames(12)) {
+                RequiemPlayer.manaEqualizerVolatilityStack--;
+                RequiemPlayer.manaEqualizerVolatilityTimer = 0;
+            }
+            if (RequiemPlayer.manaEqualizerVolatilityStack >= 10) {
+                RequiemPlayer.manaEqualizerVolatilityStack = 0;
+                this.player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(`${this.player.name} ${ModLocalization.getTranslationString('DeathText.ManaEqualizer')}`), this.player.statLife, 1, false);
+                Terraria.Audio.SoundEngine['void PlaySound(int type, Vector2 position, int style)'](4, this.player.position, 58);
+                for (let i = 0; i < 15; i++) {
+                    const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 27, Terraria.Main.rand['int Next(int minValue, int maxValue)'](-4, 4), Terraria.Main.rand['int Next(int minValue, int maxValue)'](-4, 4), 0, Microsoft.Xna.Framework.Graphics.Color.new(), 1);
+                    Terraria.Main.dust[dust].scale = 1.2 + Terraria.Main.rand['int Next(int maxValue)'](10) * 0.2;
+                    Terraria.Main.dust[dust].noGravity = true;
+                }
+                for (let j = 0; j < 30; j++) {
+                    const color = Microsoft.Xna.Framework.Graphics.Color.new();
+                    color.R = 255;
+                    color.G = 98;
+                    color.B = 236;
+                    const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 27, Terraria.Main.rand['int Next(int minValue, int maxValue)'](-15, 15), Terraria.Main.rand['int Next(int minValue, int maxValue)'](-15, 15), 0, color, 1.5);
+                    Terraria.Main.dust[dust].noGravity = true;
+                }
+                for (let k = 0; k < 20; k++) {
+                    const color = Microsoft.Xna.Framework.Graphics.Color.new();
+                    color.R = 190;
+                    color.G = 0;
+                    color.B = 165;
+                    const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 27, Terraria.Main.rand['int Next(int minValue, int maxValue)'](-10, 10), Terraria.Main.rand['int Next(int minValue, int maxValue)'](-10, 10), 0, color, 2.25);
+                    Terraria.Main.dust[dust].noGravity = true;
+                }
+            }
+        }
+        
+        RequiemPlayer.CritAndDamageBoost(this.player);
+        RequiemPlayer.AttackSpeedMultiplier(this.player);
     }
     
     OnHitNPC(item, target, damage, knockback, crit) {
@@ -372,7 +447,7 @@ export class RequiemPlayer extends ModPlayer {
             RequiemPlayer.featherCrystalCooldown = 0;
         }
 
-        player.statManaMax2 += (RequiemPlayer.ankhOfLife ? 50 : 0);
+        player.statManaMax2 += (RequiemPlayer.ankhOfLife ? 50 : 0) + (RequiemPlayer.manaEqualizer ? player.statManaMax2 * 0.5 : 0);
         
         if (RequiemPlayer.ankhOfLife) {
             player.manaCost *= 0.85;
@@ -414,6 +489,44 @@ export class RequiemPlayer extends ModPlayer {
         }
         if (RequiemPlayer.areThereAnyBosses && player.aggro < 0) {
             player.aggro = 0;
+        }
+    }
+    
+    static AttackSpeedMultiplier(player) {
+        const attackSpeed = RequiemPlayer.attackSpeed;
+        if (attackSpeed > 0) {
+            player.meleeSpeed += attackSpeed;
+            RequiemPlayer.firingSpeed += attackSpeed;
+            RequiemPlayer.castingSpeed += attackSpeed;
+        }
+
+        const item = Terraria.Item.new();
+        item['void SetDefaults(int Type, bool noMatCheck)'](player.HeldItem.type, false);
+        item.Prefix(player.HeldItem.prefix);
+        if (item.magic) {
+            player.HeldItem.useTime = item.useTime * (1 - RequiemPlayer.castingSpeed);
+            player.HeldItem.useAnimation  = item.useAnimation * (1 - RequiemPlayer.castingSpeed);
+        }
+        if (item.ranged) {
+            player.HeldItem.useTime = item.useTime * (1 - RequiemPlayer.firingSpeed);
+            player.HeldItem.useAnimation  = item.useAnimation * (1 - RequiemPlayer.firingSpeed);
+        }
+        Terraria.Item.TurnToAir(item);
+    }
+    
+    static CritAndDamageBoost(player) {
+        const crit = RequiemPlayer.allCrit;
+        const damage = RequiemPlayer.allDamage;
+        if (crit > 0) {
+            player.meleeCrit += crit;
+            player.magicCrit += crit;
+            player.rangedCrit += crit;
+        }
+        
+        if (damage > 0) {
+            player.meleeDamage += damage;
+            player.magicDamage += damage;
+            player.rangedDamage += damage;
         }
     }
 }

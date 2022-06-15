@@ -13,4 +13,18 @@ export class VialOfGraveEarth extends ModItem {
             player.pickSpeed -= 0.15;
         }
     }
+    
+    AddRecipes() {
+        this.CreateRecipe()
+          .AddIngredient(424, 150)
+          .AddIngredient(31, 1)
+          .AddTile(16)
+          .Register();
+
+        this.CreateRecipe()
+          .AddIngredient(1103, 150)
+          .AddIngredient(31, 1)
+          .AddTile(16)
+          .Register();
+    }
 }

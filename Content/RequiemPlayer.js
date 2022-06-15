@@ -378,6 +378,15 @@ export class RequiemPlayer extends ModPlayer {
             this.player.lifeRegen += 3;
         }
     }
+
+    UpdateBadLifeRegen() {
+        if (RequiemPlayer.manaEqualizerVolatilityStack > 0) {
+            if (this.player.lifeRegen > 0){
+                this.player.lifeRegen = 0;
+            }
+            this.player.lifeRegenTime = 0;
+            this.player.lifeRegen -= RequiemPlayer.manaEqualizerVolatilityStack / 10 * 10;
+        }
     }
 
     PreHurt(pvp, quiet, modifier) {

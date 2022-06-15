@@ -39,6 +39,9 @@ export class RequiemPlayer extends ModPlayer {
     static attackSpeed;
     static castingSpeed;
     static firingSpeed;
+    static shimmeringCloak;
+    static stealth = 1;
+    static stealthTimer = 0;
 
     constructor() {
         super();
@@ -67,6 +70,7 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.attackSpeed = 0;
         RequiemPlayer.castingSpeed = 0;
         RequiemPlayer.firingSpeed = 0;
+        RequiemPlayer.shimmeringCloak = false;
     }
     
     UpdateDead() {
@@ -79,7 +83,9 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.icyHeartTimer++;
         
         RequiemPlayer.areThereAnyBosses = Utils.anyBossNPCs();
+        RequiemPlayer.VisualEffects(this.player);
         RequiemPlayer.MiscEffects(this.player);
+        RequiemPlayer.StandingStillEffects(this.player);
         RequiemPlayer.Limits(this.player);
         
         if (RequiemPlayer.fireAmulet) {
@@ -296,7 +302,7 @@ export class RequiemPlayer extends ModPlayer {
     }
     
     OnHitNPC(item, target, damage, knockback, crit) {
-        if (RequiemPlayer.goldenScarab && Utils.IsNPCHostile(target)) {
+        if (RequiemPlayer.goldenScarab && Utils.isNPCHostile(target)) {
             target.AddBuff(72, 120, false);
             Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 71, 1, false, 0, false, false);
             if (Terraria.Main.rand['int Next(int maxValue)'](10) === 0) {
@@ -337,7 +343,7 @@ export class RequiemPlayer extends ModPlayer {
             }
         }
 
-        if (RequiemPlayer.goldenScarab  && Utils.IsNPCHostile(target)) {
+        if (RequiemPlayer.goldenScarab  && Utils.isNPCHostile(target)) {
             target.AddBuff(72, 120, false);
             Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 71, 1, false, 0, false, false);
             if (Terraria.Main.rand['int Next(int maxValue)'](10) === 0) {
@@ -390,6 +396,8 @@ export class RequiemPlayer extends ModPlayer {
     }
 
     PreHurt(pvp, quiet, modifier) {
+        RequiemPlayer.stealth = 1;
+        
         if (RequiemPlayer.icyHeart) {
             modifier.damage *= RequiemPlayer.icyHeartDR;
             RequiemPlayer.icyHeartTimer = -600;
@@ -498,6 +506,47 @@ export class RequiemPlayer extends ModPlayer {
         }
         if (RequiemPlayer.areThereAnyBosses && player.aggro < 0) {
             player.aggro = 0;
+        }
+    }
+    
+    static StandingStillEffects(player) {
+        if (RequiemPlayer.shimmeringCloak) {
+            if (player.itemAnimation > 0){
+                RequiemPlayer.stealthTimer = 5;
+            }
+            if (player.velocity.X === 0 && !player.mount.Active) {
+                if (RequiemPlayer.stealthTimer === 0 && RequiemPlayer.stealth > 0) {
+                    RequiemPlayer.stealth -= 0.015;
+                    if (RequiemPlayer.stealth <= 0){
+                        RequiemPlayer.stealth = 0;
+                    }
+                }
+            } else {
+                const num = Math.abs(player.velocity.X) + Math.abs(player.velocity.Y);
+                RequiemPlayer.stealth += num * 0.0075;
+                if (RequiemPlayer.stealth > 1) {
+                    RequiemPlayer.stealth = 1;
+                }
+                if (player.mount.Active) {
+                    RequiemPlayer.stealth = 1;
+                }
+            }
+
+            player.rangedDamage += (1 - RequiemPlayer.stealth) * 0.15;
+            player.rangedCrit += (1 - RequiemPlayer.stealth) * 5;
+            if (RequiemPlayer.stealthTimer > 0) {
+                RequiemPlayer.stealthTimer--;
+            }
+        } else {
+            RequiemPlayer.stealth = 1;
+        }
+    }
+    
+    static VisualEffects(player) {
+        if (RequiemPlayer.shimmeringCloak && player.velocity.X === 0 && !player.mount.Active) {
+            const dust = Terraria.Dust.NewDust(player.position, player.width + 4, player.height + 4, 244, 0.4, 0.4, 100, Microsoft.Xna.Framework.Graphics.Color.new(), 1.5);
+            Terraria.Main.dust[dust].noGravity = true;
+            Terraria.Main.dust[dust].velocity = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Terraria.Main.dust[dust].velocity, 0.5);
         }
     }
     

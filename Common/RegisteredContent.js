@@ -41,6 +41,7 @@ import {ElectrumBar} from "../Content/Items/Materials/ElectrumBar.js";
 import {GlitteringDust} from "../Content/Items/Materials/GlitteringDust.js";
 import {FeatherCrystal} from "../Content/Items/Accessories/FeatherCrystal.js";
 import {ManaEqualizer} from "../Content/Items/Accessories/ManaEqualizer.js";
+import {ShimmeringCloak} from "../Content/Items/Accessories/ShimmeringCloak.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
@@ -77,6 +78,7 @@ function initializeAccessories() {
     ModItem.register(BrawlersGloves);
     ModItem.register(FeatherCrystal);
     ModItem.register(ManaEqualizer);
+    ModItem.register(ShimmeringCloak);
 }
 
 function initializeArmors() {

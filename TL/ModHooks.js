@@ -2400,6 +2400,20 @@ export class ModHooks {
            ItemLoader.AddRecipes();
         });
 
+        Terraria.GameContent.ItemDropRules.CommonCode.DropItemFromNPC.hook((original, npc, itemId, stack, scattered) => {
+            if (itemId > 0) {
+                let x = npc.position.X + npc.width / 2;
+                let y = npc.position.Y + npc.height / 2;
+                
+                if (scattered) {
+                    x = npc.position.X + Terraria.Main.rand['int Next(int maxValue)'](npc.width + 1);
+                    y = npc.position.Y + Terraria.Main.rand['int Next(int maxValue)'](npc.height + 1);
+                }
+                const itemIndex = Terraria.Item['int NewItem(int X, int Y, int Width, int Height, int Type, int Stack, bool noBroadcast, int pfix, bool noGrabDelay, bool reverseLookup)'](x, y, 0, 0, itemId, stack, false, -1, false, false);
+                Terraria.GameContent.ItemDropRules.CommonCode.ModifyItemDropFromNPC(npc, itemIndex);
+            }
+        });
+
         ModHooks.isInitialized = true;
     }
 }

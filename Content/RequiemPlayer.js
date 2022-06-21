@@ -4,7 +4,8 @@ import {Microsoft, System, Terraria} from "../TL/ModImports.js";
 import {ModLocalization} from "../TL/ModLocalization.js";
 
 export class RequiemPlayer extends ModPlayer {
-    static fireAmulet;
+    static blessedRelic;
+    static blessedRelicTimer = 0;
     static shadowflameMinion;
     static oilMinion;
     static areThereAnyBosses = false;
@@ -23,7 +24,7 @@ export class RequiemPlayer extends ModPlayer {
     static undeadHunterCooldown = 0;
     static yagasHead;
     static ringOfReplenishment;
-    static goldenScarab;
+    static precious;
     static faerieRing;
     static warriorBracer;
     static brawlerGloves;
@@ -42,13 +43,19 @@ export class RequiemPlayer extends ModPlayer {
     static shimmeringCloak;
     static stealth = 1;
     static stealthTimer = 0;
+    static hallowTreasureMagnet;
+    static absorptionSphere;
+    static runicScroll;
+    static shamanicCharm;
+    static shamanicCharmCooldown = 0;
+    static dotResist;
 
     constructor() {
         super();
     }
 
     ResetEffects() {
-        RequiemPlayer.fireAmulet = false;
+        RequiemPlayer.blessedRelic = false;
         RequiemPlayer.shadowflameMinion = false;
         RequiemPlayer.oilMinion = false;
         RequiemPlayer.defianceBanner = false;
@@ -59,7 +66,7 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.undeadHunter = false;
         RequiemPlayer.yagasHead = false;
         RequiemPlayer.ringOfReplenishment = false;
-        RequiemPlayer.goldenScarab = false;
+        RequiemPlayer.precious = false;
         RequiemPlayer.faerieRing = false;
         RequiemPlayer.warriorBracer = false;
         RequiemPlayer.brawlerGloves = false;
@@ -71,30 +78,17 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.castingSpeed = 0;
         RequiemPlayer.firingSpeed = 0;
         RequiemPlayer.shimmeringCloak = false;
-    }
-    
-    UpdateDead() {
-        RequiemPlayer.ankhOfLife = false;
-        RequiemPlayer.undeadHunter = false;
-        RequiemPlayer.manaEqualizerVolatilityStack = 0;
+        RequiemPlayer.hallowTreasureMagnet = false;
+        RequiemPlayer.absorptionSphere = false;
+        RequiemPlayer.runicScroll = false;
+        RequiemPlayer.shamanicCharm = false;
+        RequiemPlayer.dotResist = 0;
     }
 
     PostUpdateEquips() {
-        RequiemPlayer.icyHeartTimer++;
-        
-        RequiemPlayer.areThereAnyBosses = Utils.anyBossNPCs();
-        RequiemPlayer.VisualEffects(this.player);
         RequiemPlayer.MiscEffects(this.player);
         RequiemPlayer.StandingStillEffects(this.player);
         RequiemPlayer.Limits(this.player);
-        
-        if (RequiemPlayer.fireAmulet) {
-            this.player.maxMinions += 1;
-        }
-        
-        if (RequiemPlayer.shadowflameMinion) {
-            this.player.maxMinions += 1;
-        }
         
         if (RequiemPlayer.oilMinion) {
             this.player.maxMinions += 2;
@@ -146,23 +140,6 @@ export class RequiemPlayer extends ModPlayer {
                 this.player.meleeSpeed += RequiemPlayer.defianceBannerBonus;
                 this.player.meleeCrit += Math.round(RequiemPlayer.defianceBannerBonus * 100);
                 this.player.endurance += RequiemPlayer.defianceBannerBonus / 2;
-            }
-        }
-
-        if (RequiemPlayer.icyHeart) {
-            RequiemPlayer.icyHeartDR = Microsoft.Xna.Framework.MathHelper.Lerp(1, 0, Microsoft.Xna.Framework.MathHelper.Clamp(RequiemPlayer.icyHeartTimer, 0, 1200) / 1200);
-            let num = Microsoft.Xna.Framework.MathHelper.Lerp(1, 20, Microsoft.Xna.Framework.MathHelper.Clamp(RequiemPlayer.icyHeartTimer, 0, 1200) / 1200);
-            let playerWidth = this.player.width * 1.2;
-            let playerHeight = this.player.height * 1.1;
-            for (let i = 0; i < num; i++) {
-                let radius = Terraria.Main.rand.NextDouble() * 2.0 * 3.14;
-                const vector = Microsoft.Xna.Framework.Vector2.new();
-                vector.X = Math.sin(radius) * playerWidth;
-                vector.Y = Math.cos(radius) * playerHeight;
-                let num = Microsoft.Xna.Framework.Vector2.op_Subtraction(Microsoft.Xna.Framework.Vector2.op_Addition(this.player.Center, vector), Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Microsoft.Xna.Framework.Vector2.One, 4));
-                const dust = Terraria.Dust.NewDust(num, 0, 0, 135, 0, 0, 100, Microsoft.Xna.Framework.Graphics.Color.new(), 1);
-                Terraria.Main.dust[dust].noGravity = true;
-                Terraria.Main.dust[dust].velocity = this.player.velocity;
             }
         }
         
@@ -274,8 +251,8 @@ export class RequiemPlayer extends ModPlayer {
                 this.player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(`${this.player.name} ${ModLocalization.getTranslationString('DeathText.ManaEqualizer')}`), this.player.statLife, 1, false);
                 Terraria.Audio.SoundEngine['void PlaySound(int type, Vector2 position, int style)'](4, this.player.position, 58);
                 for (let i = 0; i < 15; i++) {
-                    const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 27, Terraria.Main.rand['int Next(int minValue, int maxValue)'](-4, 4), Terraria.Main.rand['int Next(int minValue, int maxValue)'](-4, 4), 0, Microsoft.Xna.Framework.Graphics.Color.new(), 1);
-                    Terraria.Main.dust[dust].scale = 1.2 + Terraria.Main.rand['int Next(int maxValue)'](10) * 0.2;
+                    const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 27, Utils.randNextRange(-4, 4), Utils.randNextRange(-4, 4), 0, Microsoft.Xna.Framework.Graphics.Color.new(), 1);
+                    Terraria.Main.dust[dust].scale = 1.2 + Utils.randNext(10) * 0.2;
                     Terraria.Main.dust[dust].noGravity = true;
                 }
                 for (let j = 0; j < 30; j++) {
@@ -283,7 +260,7 @@ export class RequiemPlayer extends ModPlayer {
                     color.R = 255;
                     color.G = 98;
                     color.B = 236;
-                    const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 27, Terraria.Main.rand['int Next(int minValue, int maxValue)'](-15, 15), Terraria.Main.rand['int Next(int minValue, int maxValue)'](-15, 15), 0, color, 1.5);
+                    const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 27, Utils.randNextRange(-15, 15), Utils.randNextRange(-15, 15), 0, color, 1.5);
                     Terraria.Main.dust[dust].noGravity = true;
                 }
                 for (let k = 0; k < 20; k++) {
@@ -291,10 +268,17 @@ export class RequiemPlayer extends ModPlayer {
                     color.R = 190;
                     color.G = 0;
                     color.B = 165;
-                    const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 27, Terraria.Main.rand['int Next(int minValue, int maxValue)'](-10, 10), Terraria.Main.rand['int Next(int minValue, int maxValue)'](-10, 10), 0, color, 2.25);
+                    const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 27, Utils.randNextRange(-10, 10), Utils.randNextRange(-10, 10), 0, color, 2.25);
                     Terraria.Main.dust[dust].noGravity = true;
                 }
             }
+        }
+        
+        if (RequiemPlayer.blessedRelic && RequiemPlayer.blessedRelicTimer > 0) {
+            this.player.minionDamage += 0.1;
+            this.player.statDefense += 6;
+            this.player.endurance += 0.03;
+            this.player.lifeRegen += 2;
         }
         
         RequiemPlayer.CritAndDamageBoost(this.player);
@@ -302,66 +286,13 @@ export class RequiemPlayer extends ModPlayer {
     }
     
     OnHitNPC(item, target, damage, knockback, crit) {
-        if (RequiemPlayer.goldenScarab && Utils.isNPCHostile(target)) {
-            target.AddBuff(72, 120, false);
-            Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 71, 1, false, 0, false, false);
-            if (Terraria.Main.rand['int Next(int maxValue)'](10) === 0) {
-                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 72, 1, false, 0, false, false);
-            }
-            if (Terraria.Main.rand['int Next(int maxValue)'](100) === 0) {
-                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 73, 1, false, 0, false, false);
-            }
-            if (Terraria.Main.rand['int Next(int maxValue)'](1000) === 0) {
-                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 74, 1, false, 0, false, false);
-            }
-        }
-        
-        if (RequiemPlayer.warriorBracer && Terraria.Main.rand['int Next(int maxValue)'](11) === 0) {
-            target.StrikeNPC(item.damage, 0, 0, crit, false, false);
-        }
-        
-        if (RequiemPlayer.brawlerGloves && RequiemPlayer.brawlerGlovesStack < 150 && RequiemPlayer.brawlerGlovesCooldown <= 0) {
-            RequiemPlayer.brawlerGlovesStack++;
-            RequiemPlayer.brawlerGlovesCooldown = 30;
-        }
+        RequiemPlayer.ItemOnHit(item, this.player, target, damage, crit, Utils.isNPCHostile(target) && !target.SpawnedFromStatue);
+        RequiemPlayer.NPCDebuffsOnHit(target, item.melee, item.ranged, item.magic, item.summon, Utils.isNPCHostile(target) && !target.SpawnedFromStatue);
     }
 
     OnHitNPCWithProj(proj, target) {
-        if (Utils.isSummon(proj)) {
-            if (RequiemPlayer.fireAmulet) {
-                target.AddBuff(24, 60, false);
-            }
-            
-            if (RequiemPlayer.shadowflameMinion) {
-                target.AddBuff(153, 180, false);
-            }
-            
-            if (RequiemPlayer.oilMinion) {
-                if (Terraria.Main.rand['int Next(int maxValue)'](2) === 0) {
-                    target.AddBuff(204, 60 * Terraria.Main.rand['int Next(int minValue, int maxValue)'](4, 10), false);
-                }
-            }
-        }
-
-        if (RequiemPlayer.goldenScarab  && Utils.isNPCHostile(target)) {
-            target.AddBuff(72, 120, false);
-            Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 71, 1, false, 0, false, false);
-            if (Terraria.Main.rand['int Next(int maxValue)'](10) === 0) {
-                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 72, 1, false, 0, false, false);
-            }
-            if (Terraria.Main.rand['int Next(int maxValue)'](100) === 0) {
-                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 73, 1, false, 0, false, false);
-            }
-            if (Terraria.Main.rand['int Next(int maxValue)'](1000) === 0) {
-                Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](target.Center, target.width, target.height, 74, 1, false, 0, false, false);
-            }
-        }
-        
-        if (RequiemPlayer.warriorBracer && proj.melee && Terraria.Main.rand['int Next(int maxValue)'](11) === 0) {
-            // Полурабочий костыль крит. шанса
-            const crit = Terraria.Main.rand['int Next(int minValue, int maxValue)'](1, 101) < Terraria.Main.player[proj.owner].meleeCrit;
-            target.StrikeNPC(proj.damage, 0, 0, crit, false, false);
-        }
+        RequiemPlayer.ProjOnHit(proj, this.player, target, Utils.isNPCHostile(target) && !target.SpawnedFromStatue);
+        RequiemPlayer.NPCDebuffsOnHit(target, proj.melee, proj.ranged, proj.magic, Utils.isSummon(proj), Utils.isNPCHostile(target) && !target.SpawnedFromStatue);
     }
     
     UpdateLifeRegen() {
@@ -393,6 +324,10 @@ export class RequiemPlayer extends ModPlayer {
             this.player.lifeRegenTime = 0;
             this.player.lifeRegen -= RequiemPlayer.manaEqualizerVolatilityStack / 10 * 10;
         }
+        
+        if (RequiemPlayer.dotResist > 0) {
+            this.player.lifeRegen = Math.round(this.player.lifeRegen * (1 - RequiemPlayer.dotResist));
+        }
     }
 
     PreHurt(pvp, quiet, modifier) {
@@ -406,21 +341,35 @@ export class RequiemPlayer extends ModPlayer {
             }
         }
         
-        if (RequiemPlayer.undeadHunter) {
-            if (Terraria.Main.rand['int Next(int maxValue)'](10) === 0 && RequiemPlayer.undeadHunterCooldown === 0) {
-                modifier.damage = 0;
-                if (modifier.damage === 0) {
-                    Utils.giveIFrames(this.player, 45, true);
-                    RequiemPlayer.undeadHunterCooldown = Utils.secondsToFrames(15);
-                    for (let i = 0; i < 100; i++) {
-                        const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 235, 0, 0, 100, Microsoft.Xna.Framework.Graphics.Color.new(), 2);
-                        Terraria.Main.dust[dust].noGravity = true;
-                        Terraria.Main.dust[dust].position.X += Terraria.Main.rand['int Next(int minValue, int maxValue)'](-20, 21);
-                        Terraria.Main.dust[dust].position.Y += Terraria.Main.rand['int Next(int minValue, int maxValue)'](-20, 21);
-                        Terraria.Main.dust[dust].velocity = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Terraria.Main.dust[dust].velocity, 1.2);
-                        Terraria.Main.dust[dust].scale *= 1 + Terraria.Main.rand['int Next(int maxValue)'](40) * 0.01;
-                    }
+        if (RequiemPlayer.undeadHunter && Utils.randNext(10) === 0 && RequiemPlayer.undeadHunterCooldown === 0) {
+            modifier.damage = 0;
+            if (modifier.damage === 0) {
+                Utils.giveIFrames(this.player, 45, true);
+                RequiemPlayer.undeadHunterCooldown = Utils.secondsToFrames(15);
+                for (let i = 0; i < 100; i++) {
+                    const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 235, 0, 0, 100, Microsoft.Xna.Framework.Graphics.Color.new(), 2);
+                    Terraria.Main.dust[dust].noGravity = true;
+                    Terraria.Main.dust[dust].position.X += Utils.randNextRange(-20, 21);
+                    Terraria.Main.dust[dust].position.Y += Utils.randNextRange(-20, 21);
+                    Terraria.Main.dust[dust].velocity = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Terraria.Main.dust[dust].velocity, 1.2);
+                    Terraria.Main.dust[dust].scale *= 1 + Utils.randNext(40) * 0.01;
                 }
+            }
+        }
+        
+        if (RequiemPlayer.absorptionSphere) {
+            const healLife = modifier.damage * 0.05;
+            Utils.healLife(this.player, healLife);
+        }
+        
+        if (RequiemPlayer.shamanicCharm && RequiemPlayer.shamanicCharmCooldown <= 0) {
+            const flag = Terraria.Main.hardMode ? 50 : 15;
+            RequiemPlayer.shamanicCharmCooldown = Utils.secondsToFrames(7);
+            for (let i = 0; i < 12; i++) {
+                Terraria.Projectile['int NewProjectile(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack, int Owner, float ai0, float ai1)'](this.player.Center, Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Terraria.Utils.RotatedBy(Microsoft.Xna.Framework.Vector2.UnitX, Math.PI * 2 / 8 * i, Microsoft.Xna.Framework.Vector2.new()), 1.25), 263, flag * Utils.averageDamage(this.player), 6, this.player.whoAmI, 0, 0);
+            }
+            for (let i = 0; i < 10; i++) {
+                Terraria.Projectile['int NewProjectile(Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack, int Owner, float ai0, float ai1)'](this.player.Center, Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Terraria.Utils.RotatedBy(Microsoft.Xna.Framework.Vector2.UnitX, Math.PI * 2 / 10 * i, Microsoft.Xna.Framework.Vector2.new()), 0), 274, flag * Utils.averageDamage(this.player), 4, this.player.whoAmI, 0, 0);
             }
         }
         
@@ -431,7 +380,7 @@ export class RequiemPlayer extends ModPlayer {
         if (RequiemPlayer.ankhOfLife && RequiemPlayer.ankhOfLifeCooldown === 0) {
             RequiemPlayer.encased = true;
             RequiemPlayer.ankhOfLifeCooldown = Utils.secondsToFrames(180);
-            this.player.statLife = this.player.statLifeMax2 * 3 / 10;
+            this.player.statLife = this.player.statLifeMax2 * 0.3;
             Terraria.Audio.SoundEngine['void PlaySound(int type, Vector2 position, int style)'](2, this.player.position, 92);
             for (let i = 0; i < 60; i++) {
                 const dust = Terraria.Dust.NewDust(this.player.position, this.player.width, this.player.height, 88, 0, 0, 0, Microsoft.Xna.Framework.Graphics.Color.new(), 2.5);
@@ -444,6 +393,15 @@ export class RequiemPlayer extends ModPlayer {
     }
     
     static MiscEffects(player) {
+        RequiemPlayer.icyHeartTimer++;
+        
+        RequiemPlayer.areThereAnyBosses = Utils.anyBossNPCs();
+        
+        RequiemPlayer.blessedRelicTimer--;
+        if (RequiemPlayer.blessedRelicTimer < 0) {
+            RequiemPlayer.blessedRelicTimer = 0;
+        }
+        
         RequiemPlayer.ankhOfLifeCooldown--;
         if (RequiemPlayer.ankhOfLifeCooldown < 0) {
             RequiemPlayer.ankhOfLifeCooldown = 0;
@@ -463,26 +421,26 @@ export class RequiemPlayer extends ModPlayer {
         if (RequiemPlayer.featherCrystalCooldown < 0) {
             RequiemPlayer.featherCrystalCooldown = 0;
         }
-
-        player.statManaMax2 += (RequiemPlayer.ankhOfLife ? 50 : 0) + (RequiemPlayer.manaEqualizer ? player.statManaMax2 * 0.5 : 0);
         
-        if (RequiemPlayer.ankhOfLife) {
-            player.manaCost *= 0.85;
+        RequiemPlayer.shamanicCharmCooldown--;
+        if (RequiemPlayer.shamanicCharmCooldown < 0) {
+            RequiemPlayer.shamanicCharmCooldown = 0;
         }
+
+        player.statManaMax2 += (RequiemPlayer.manaEqualizer ? player.statManaMax2 * 0.5 : 0);
         
         if (RequiemPlayer.encased) {
             RequiemPlayer.encasedTimer++;
             if (RequiemPlayer.encasedTimer > 0 && RequiemPlayer.encasedTimer < 180) {
-                RequiemPlayer.encased = false;
                 player.frozen = true;
                 Utils.giveIFrames(player, 90);
                 player.velocity.X = 0;
                 player.velocity.Y = -0.4;
+                player.buffImmune[47] = true;
+                player.buffImmune[46] = true;
                 const dust = Terraria.Dust.NewDust(player.position, player.width, player.height, 88, 0, 0, 0, Microsoft.Xna.Framework.Graphics.Color.new(), 1);
                 Terraria.Main.dust[dust].noGravity = true;
                 Terraria.Main.dust[dust].velocity = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Terraria.Main.dust[dust].velocity, 2);
-                player.buffImmune[47] = true;
-                player.buffImmune[46] = true;
             } else if (RequiemPlayer.encasedTimer >= 180) {
                 Terraria.Audio.SoundEngine['void PlaySound(int type, Vector2 position, int style)'](2, player.position, 27);
                 RequiemPlayer.encasedTimer = 0;
@@ -490,16 +448,29 @@ export class RequiemPlayer extends ModPlayer {
             }
         }
         
-        if (RequiemPlayer.goldenScarab) {
-            player.luck += 0.1;
-        }
-        
         if (RequiemPlayer.brawlerGloves) {
             const num = 0.15;
             player.meleeDamage += RequiemPlayer.brawlerGlovesStack / 150 * num;
         }
-    }
 
+        if (RequiemPlayer.icyHeart) {
+            RequiemPlayer.icyHeartDR = Microsoft.Xna.Framework.MathHelper.Lerp(1, 0, Microsoft.Xna.Framework.MathHelper.Clamp(RequiemPlayer.icyHeartTimer, 0, 1200) / 1200);
+            const num = Microsoft.Xna.Framework.MathHelper.Lerp(1, 20, Microsoft.Xna.Framework.MathHelper.Clamp(RequiemPlayer.icyHeartTimer, 0, 1200) / 1200);
+            const playerWidth = player.width * 1.2;
+            const playerHeight = player.height * 1.1;
+            for (let i = 0; i < num; i++) {
+                const radius = Terraria.Main.rand.NextDouble() * 2.0 * 3.14;
+                const vector = Microsoft.Xna.Framework.Vector2.new();
+                vector.X = Math.sin(radius) * playerWidth;
+                vector.Y = Math.cos(radius) * playerHeight;
+                const num = Microsoft.Xna.Framework.Vector2.op_Subtraction(Microsoft.Xna.Framework.Vector2.op_Addition(player.Center, vector), Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Microsoft.Xna.Framework.Vector2.One, 4));
+                const dust = Terraria.Dust.NewDust(num, 0, 0, 135, 0, 0, 100, Microsoft.Xna.Framework.Graphics.Color.new(), 1);
+                Terraria.Main.dust[dust].noGravity = true;
+                Terraria.Main.dust[dust].velocity = player.velocity;
+            }
+        }
+    }
+    
     static Limits(player) {
         if (player.endurance > 0) {
             player.endurance = 1 - 1 / (1 + player.endurance);
@@ -520,6 +491,11 @@ export class RequiemPlayer extends ModPlayer {
                     if (RequiemPlayer.stealth <= 0){
                         RequiemPlayer.stealth = 0;
                     }
+                }
+                if (RequiemPlayer.stealth === 0) {
+                    const dust = Terraria.Dust.NewDust(player.position, player.width + 4, player.height + 4, 244, 0.4, 0.4, 100, Microsoft.Xna.Framework.Graphics.Color.new(), 1.5);
+                    Terraria.Main.dust[dust].noGravity = true;
+                    Terraria.Main.dust[dust].velocity = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Terraria.Main.dust[dust].velocity, 0.5);
                 }
             } else {
                 const num = Math.abs(player.velocity.X) + Math.abs(player.velocity.Y);
@@ -542,11 +518,111 @@ export class RequiemPlayer extends ModPlayer {
         }
     }
     
-    static VisualEffects(player) {
-        if (RequiemPlayer.shimmeringCloak && player.velocity.X === 0 && !player.mount.Active) {
-            const dust = Terraria.Dust.NewDust(player.position, player.width + 4, player.height + 4, 244, 0.4, 0.4, 100, Microsoft.Xna.Framework.Graphics.Color.new(), 1.5);
-            Terraria.Main.dust[dust].noGravity = true;
-            Terraria.Main.dust[dust].velocity = Microsoft.Xna.Framework.Vector2['Vector2 op_Multiply(Vector2 value, float scaleFactor)'](Terraria.Main.dust[dust].velocity, 0.5);
+    static ItemOnHit(item, player, target, damage, crit, npcCheck) {
+        if (npcCheck) {
+            if (RequiemPlayer.precious) {
+                if (Utils.randNext(1000) === 0) {
+                    Utils.spawnItem(target.Center, target.width, target.height, 74, 1, 0);
+                }
+            }
+
+            if (RequiemPlayer.brawlerGloves && RequiemPlayer.brawlerGlovesStack < 150 && crit && RequiemPlayer.brawlerGlovesCooldown <= 0) {
+                RequiemPlayer.brawlerGlovesStack++;
+                RequiemPlayer.brawlerGlovesCooldown = 30;
+            }
+        }
+
+        if (RequiemPlayer.warriorBracer && Utils.randNext(11) === 0) {
+            target.StrikeNPC(item.damage, 0, 0, crit, false, false);
+        }
+    }
+    
+    static ProjOnHit(proj, player, target, npcCheck) {
+        if (npcCheck) {
+            if (RequiemPlayer.precious) {
+                if (Utils.randNext(1000) === 0) {
+                    Utils.spawnItem(target.Center, target.width, target.height, 74, 1, 0);
+                }
+            }
+        }
+        
+        if (proj.melee) {
+            RequiemPlayer.ProjMeleeOnHit(proj, player, target, npcCheck);
+        }
+        
+        if (Utils.isSummon(proj)) {
+            RequiemPlayer.SummonOnHit(proj, player, target, npcCheck);
+        }
+    }
+    
+    static ProjMeleeOnHit(proj, player, target, npcCheck) {
+        if (npcCheck) {
+            if (RequiemPlayer.warriorBracer && Utils.randNext(11) === 0) {
+                // Полурабочий костыль крит. шанса
+                const crit = Utils.randNextRange(0, 101) < Terraria.Main.player[proj.owner].meleeCrit;
+                target.StrikeNPC(proj.damage, 0, 0, crit, false, false);
+            }
+        }
+    }
+
+    static SummonOnHit(proj, player, target, npcCheck) {
+        if (npcCheck) {
+            if (RequiemPlayer.blessedRelic) {
+                RequiemPlayer.blessedRelicTimer = 60;
+            }
+        }
+    }
+    
+    static NPCDebuffsOnHit(target, melee, ranged, magic, summon, npcCheck) {
+        if (npcCheck) {
+            if (RequiemPlayer.precious) {
+                target.AddBuff(72, 120, false);
+            }
+
+            if (magic) {
+                if (RequiemPlayer.runicScroll) {
+                    switch (Utils.randNext(13)) {
+                        case 0: {
+                            target.AddBuff(24, 120, false);
+                            break;
+                        }
+                        case 1: {
+                            target.AddBuff(70, 120, false);
+                            break;
+                        }
+                        case 2: {
+                            target.AddBuff(39, 120, false);
+                            break;
+                        }
+                        case 3: {
+                            target.AddBuff(44, 120, false);
+                            break;
+                        }
+                        case 4: {
+                            target.AddBuff(31, 120, false);
+                            break;
+                        }
+                        case 5: {
+                            target.AddBuff(153, 120, false);
+                            break;
+                        }
+                        case 6: {
+                            target.AddBuff(20, 120, false);
+                            break;
+                        }
+                    }
+                }
+            }
+                
+            if (summon) {
+                if (RequiemPlayer.shadowflameMinion) {
+                    target.AddBuff(153, 180, false);
+                }
+
+                if (RequiemPlayer.oilMinion && Utils.randNext(2) === 0) {
+                    target.AddBuff(204, 60 * Utils.randNextRange(4, 10), false);
+                }
+            }
         }
     }
     

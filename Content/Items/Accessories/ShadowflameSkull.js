@@ -16,5 +16,6 @@ export class ShadowflameSkull extends ModItem {
     
     UpdateAccessory(player) {
         RequiemPlayer.shadowflameMinion = true;
+        player.maxMinions += 1;
     }
 }

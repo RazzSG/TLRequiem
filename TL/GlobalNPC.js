@@ -16,6 +16,9 @@ export class GlobalNPC {
 
     }
 
+    ModifyNPCLoot(npcLoot) {
+    }
+
     PostDraw(npc, spriteBatch, screenPos) {
 
     }

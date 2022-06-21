@@ -20,5 +20,6 @@ export class AnkhOfLife extends ModItem {
     
     UpdateAccessory(player) {
         RequiemPlayer.ankhOfLife = true;
+        RequiemPlayer.dotResist += 0.1;
     }
 }

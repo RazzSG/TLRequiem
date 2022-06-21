@@ -541,4 +541,10 @@ export class ItemLoader {
             globalItem.SetDefaults(item);
         }
     }
+    
+    static AddRecipes() {
+        for (let globalItem of GlobalItem.RegisteredItem) {
+            globalItem.AddRecipes();
+        }
+    }
 }

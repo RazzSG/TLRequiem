@@ -38,9 +38,6 @@ export class ModHooks {
             const projectile = ModProjectile.getModProjectile(type);
             projectile?.SetDefaults();
             Object.assign(self, projectile?.Projectile);
-            if (self.type === 92 || self.type === 9) {
-                self.timeLeft = 120;
-            }
         });
 
         Terraria.WorldGen.KillTile.hook((original, i, j, fail, effectOnly, noItem) => {
@@ -54,14 +51,13 @@ export class ModHooks {
             }
         });
 
-        Terraria.Main.DrawNPCDirect.hook((original, self, mySpriteBatch, rCurrentNPC, behindTiles, screenPos) => {
-            original(self, mySpriteBatch, rCurrentNPC, behindTiles, screenPos);
-
-            for (let npc of GlobalNPC.RegisteredNPC) {
-                npc.PostDraw(self, mySpriteBatch, screenPos);
-            }
-
-        });
+        // Terraria.Main.DrawNPCDirect.hook((original, self, mySpriteBatch, rCurrentNPC, behindTiles, screenPos) => {
+        //     original(self, mySpriteBatch, rCurrentNPC, behindTiles, screenPos);
+        //
+        //     for (let npc of GlobalNPC.RegisteredNPC) {
+        //         npc.PostDraw(self, mySpriteBatch, screenPos);
+        //     }
+        // });
 
         Terraria.NPC.NPCLoot.hook((original, self) => {
             if (!NPCLoader.PreKill(self)) {
@@ -906,7 +902,7 @@ export class ModHooks {
         Terraria.Main.Initialize_AlmostEverything.hook((original, self) => {
             original(self);
             ItemLoader.InitializeRegisteredItems();
-            ModProjectile.InitializeRegisteredProjectiles();
+            //ModProjectile.InitializeRegisteredProjectiles();
         });
 
         Terraria.Item['void SetDefaults(int Type, bool noMatCheck)'].hook((original, self, type, noMatCheck) => {
@@ -2003,29 +1999,31 @@ export class ModHooks {
             let num2 = -self.statLifeMax2;
             for (let i = 0; i < 58; i++) {
                 const item = self.inventory[i];
-                if ((item.type < ItemLoader.MAX_VANILLA_ID || item.type >= ItemLoader.MAX_VANILLA_ID && CombinedLoader.CanUseItem(self, item)) &&
-                item.stack > 0 && item.potion && item.healLife > 0) {
-                    let num3 = item.healLife - num;
-                    if (item.type >= ItemLoader.MAX_VANILLA_ID) {
-                        num3 = CombinedLoader.GetHealLife(item, self, true) - num;
-                    }
+                if (item.stack <= 0 || item.type <= 0 || !item.potion || item.healLife <= 0) {
+                    continue;
+                }
+                
+                if (item.type >= ItemLoader.MAX_VANILLA_ID && !CombinedLoader.CanUseItem(self, item)){
+                    continue;
+                }
 
-                    if (item.type === 227 && num3 < 0) {
-                        num3 += 30;
-                        if (num3 > 0) {
-                            num3 = 0;
-                        }
-                    }
+                let num3 = CombinedLoader.GetHealLife(item, self, true) - num;
 
-                    if (num2 < 0) {
-                        if (num3 > num2) {
-                            result = item;
-                            num2 = num3;
-                        }
-                    } else if (num3 < num2 && num3 >= 0) {
+                if (item.type === 227 && num3 < 0) {
+                    num3 += 30;
+                    if (num3 > 0) {
+                        num3 = 0;
+                    }
+                }
+
+                if (num2 < 0) {
+                    if (num3 > num2) {
                         result = item;
                         num2 = num3;
                     }
+                } else if (num3 < num2 && num3 >= 0) {
+                    result = item;
+                    num2 = num3;
                 }
             }
 
@@ -2038,23 +2036,22 @@ export class ModHooks {
             if (flag) {
                 return;
             }
-
-            while (true) {
-                if (item.stack > 0 && item.healMana > 0 && (self.potionDelay === 0 || item.potion)) {
-                    break;
-                }
-
-                if (item.type < ItemLoader.MAX_VANILLA_ID) {
-                    return original(self);
-                }
-
+            if (item === null) {
                 return;
             }
 
             Terraria.Audio.SoundEngine['SoundEffectInstance PlaySound(LegacySoundStyle type, Vector2 position)'](item.UseSound, self.position);
             if (item.potion) {
-                self.potionDelay = self.potionDelayTime;
-                self.AddBuff(21, self.potionDelay, true, false);
+                if (item.type === 227) {
+                    self.potionDelay = self.restorationDelayTime;
+                    self.AddBuff(21, self.potionDelay, true, false);
+                } else if (item.type === 5) {
+                    self.potionDelay = self.mushroomDelayTime;
+                    self.AddBuff(21, self.potionDelay, true, false);
+                } else {
+                    self.potionDelay = self.potionDelayTime;
+                    self.AddBuff(21, self.potionDelay, true, false);
+                }
             }
 
             ItemLoader.UseItem(item, self);
@@ -2084,12 +2081,12 @@ export class ModHooks {
                 }
             }
 
-            if (ItemLoader.ConsumeItem(item, self)) {
+            if (item.type < ItemLoader.MAX_VANILLA_ID || ItemLoader.ConsumeItem(item, self)) {
                 item.stack--;
             }
 
             if (item.stack <= 0) {
-                Terraria.Item.TurnToAir(item)
+                Terraria.Item.TurnToAir(item);
             }
         });
 
@@ -2376,10 +2373,31 @@ export class ModHooks {
             original(self);
         });
         
+        Terraria.GameContent.ItemDropRules.ItemDropDatabase.Populate.hook((original, self) => {
+           original(self);
+           
+           NPCLoader.ModifyNPCLoot(self);
+        });
+        
         Terraria.Projectile.Kill.hook((original, self) => {
            original(self); 
            
            ProjectileLoader.Kill(self);
+        });
+        
+        Terraria.Player.GetItemGrabRange.hook((original, self, item) => {
+            let result = original(self, item);
+            if (RequiemPlayer.hallowTreasureMagnet) {
+                result += 450;
+            }
+            
+            return result;
+        });
+        
+        Terraria.Chest.SetupRecipes.hook((original) => {
+           original();
+           
+           ItemLoader.AddRecipes();
         });
 
         ModHooks.isInitialized = true;

@@ -25,4 +25,7 @@ export class GlobalItem {
 
     OpenVanillaBag(context, player, arg) {
     }
+    
+    AddRecipes() {
+    }
 }

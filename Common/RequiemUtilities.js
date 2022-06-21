@@ -1,4 +1,5 @@
 ﻿import {Terraria} from "../TL/ModImports.js";
+import {RequiemPlayer} from "../Content/RequiemPlayer.js";
 
 export function isSummon(proj) {
     return proj.minion || proj.sentry ||
@@ -66,4 +67,40 @@ export function healLife(player, healAmount, healOverMax = true) {
 
 export function isNPCHostile(npc) {
     return !npc.friendly && npc.lifeMax > 5 && npc.chaseable && !npc.dontTakeDamage && !npc.immortal;
+}
+
+export function randNext(maxValue) {
+    return Terraria.Main.rand['int Next(int maxValue)'](maxValue);
+}
+
+export function randNextRange(minValue, maxValue) {
+    return Terraria.Main.rand['int Next(int minValue, int maxValue)'](minValue, maxValue);
+}
+
+export function spawnItem(pos, width, height, type, stack, prefix) {
+    Terraria.Item['int NewItem(Vector2 pos, int Width, int Height, int Type, int Stack, bool noBroadcast, int prefixGiven, bool noGrabDelay, bool reverseLookup)'](pos, width, height, type, stack, false, prefix, false, false);
+}
+
+export function isUnderwater(player) {
+    return Terraria.Collision.DrownCollision(player.position, player.width, player.height, player.gravDir, false);
+}
+
+export function averageDamage(player) {
+    return 1 + RequiemPlayer.allDamage + (player.meleeDamage + player.rangedDamage + player.magicDamage + player.minionDamage - 4) / 4;
+}
+
+export function meleeDamage(player) {
+    return 1 + RequiemPlayer.allDamage + player.meleeDamage - 1;
+}
+
+export function magicDamage(player) {
+    return 1 + RequiemPlayer.allDamage + player.magicDamage - 1;
+}
+
+export function rangedDamage(player) {
+    return 1 + RequiemPlayer.allDamage + player.rangedDamage - 1;
+}
+
+export function minionDamage(player) {
+    return 1 + RequiemPlayer.allDamage + player.minionDamage - 1;
 }

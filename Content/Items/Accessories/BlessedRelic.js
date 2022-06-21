@@ -2,7 +2,7 @@
 import {RequiemGlobalItem} from "../../RequiemGlobalItem.js";
 import {RequiemPlayer} from "../../RequiemPlayer.js";
 
-export class FireAmulet extends ModItem {
+export class BlessedRelic extends ModItem {
     SetDefaults() {
         this.Item.value = RequiemGlobalItem.Rarity2BuyPrice;
         this.Item.rare = 2;
@@ -10,6 +10,14 @@ export class FireAmulet extends ModItem {
     }
     
     UpdateAccessory(player) {
-        RequiemPlayer.fireAmulet = true;
+        RequiemPlayer.blessedRelic = true;
+    }
+    
+    AddRecipes() {
+        this.CreateRecipe()
+          .AddIngredient(22, 20)
+          .AddIngredient(182, 5)
+          .AddTile(16)
+          .Register();
     }
 }

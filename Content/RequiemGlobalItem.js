@@ -48,6 +48,7 @@ export class RequiemGlobalItem extends GlobalItem {
         switch (context) {
             case 'bossBag': {
                 RequiemGlobalItem.BossBagLoot(player, arg);
+                break;
             }
         }
     }

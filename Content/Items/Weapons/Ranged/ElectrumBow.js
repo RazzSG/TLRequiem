@@ -1,6 +1,7 @@
 ﻿import {ModItem} from "../../../../TL/ModItem.js";
 import {Microsoft, Terraria} from "../../../../TL/ModImports.js";
 import {RequiemGlobalItem} from "../../../RequiemGlobalItem.js";
+import {randNext} from "../../../../Common/RequiemUtilities.js";
 
 export class ElectrumBow extends ModItem {
     constructor() {
@@ -39,7 +40,7 @@ export class ElectrumBow extends ModItem {
             let vector2 = Terraria.Utils.RotatedBy(vector, Microsoft.Xna.Framework.MathHelper.ToRadians(num * num2), Microsoft.Xna.Framework.Vector2.new());
             vector2 = Microsoft.Xna.Framework.Vector2.op_Subtraction(vector2, vector);
             let arrowType = 0;
-            switch (Terraria.Main.rand['int Next(int maxValue)'](13)) {
+            switch (randNext(13)) {
                 case 0:
                     arrowType = 1;
                     break;

@@ -6,7 +6,7 @@ import {RequiemGlobalItem} from "../Content/RequiemGlobalItem.js";
 import {GlobalProjectile} from "../TL/GlobalProjectile.js";
 import {RequiemGlobalProjectile} from "../Content/RequiemGlobalProjectile.js";
 import {VialOfGraveEarth} from "../Content/Items/Accessories/VialOfGraveEarth.js";
-import {FireAmulet} from "../Content/Items/Accessories/FireAmulet.js";
+import {BlessedRelic} from "../Content/Items/Accessories/BlessedRelic.js";
 import {ShadowflameSkull} from "../Content/Items/Accessories/ShadowflameSkull.js";
 import {GlobalNPC} from "../TL/GlobalNPC.js";
 import {RequiemGlobalNPC} from "../Content/RequiemGlobalNPC.js";
@@ -30,7 +30,7 @@ import {YagasHead} from "../Content/Items/Accessories/YagasHead.js";
 import {StellarPendant} from "../Content/Items/Accessories/StellarPendant.js";
 import {RingOfReplenishment} from "../Content/Items/Accessories/RingOfReplenishment.js";
 import {ElectrumBow} from "../Content/Items/Weapons/Ranged/ElectrumBow.js";
-import {GoldenScarab} from "../Content/Items/Accessories/GoldenScarab.js";
+import {Precious} from "../Content/Items/Accessories/Precious.js";
 import {FaerieRing} from "../Content/Items/Accessories/FaerieRing.js";
 import {FieryCore} from "../Content/Items/Accessories/FieryCore.js";
 import {WarriorsBracer} from "../Content/Items/Accessories/WarriorsBracer.js";
@@ -42,6 +42,11 @@ import {GlitteringDust} from "../Content/Items/Materials/GlitteringDust.js";
 import {FeatherCrystal} from "../Content/Items/Accessories/FeatherCrystal.js";
 import {ManaEqualizer} from "../Content/Items/Accessories/ManaEqualizer.js";
 import {ShimmeringCloak} from "../Content/Items/Accessories/ShimmeringCloak.js";
+import {ShimmeringSilk} from "../Content/Items/Materials/ShimmeringSilk.js";
+import {RunicScroll} from "../Content/Items/Accessories/RunicScroll.js";
+import {ShamanicCharm} from "../Content/Items/Accessories/ShamanicCharm.js";
+import {HallowTreasureMagnet} from "../Content/Items/Accessories/HallowTreasureMagnet.js";
+import {AbsorptionSphere} from "../Content/Items/Accessories/AbsorptionSphere.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
@@ -58,7 +63,7 @@ export function initializeContent() {
 
 function initializeAccessories() {
     ModItem.register(VialOfGraveEarth);
-    ModItem.register(FireAmulet);
+    ModItem.register(BlessedRelic);
     ModItem.register(ShadowflameSkull);
     ModItem.register(SacredChalice);
     ModItem.register(ElixirOfLife);
@@ -71,7 +76,7 @@ function initializeAccessories() {
     ModItem.register(YagasHead);
     ModItem.register(StellarPendant);
     ModItem.register(RingOfReplenishment);
-    ModItem.register(GoldenScarab);
+    ModItem.register(Precious);
     ModItem.register(FaerieRing);
     ModItem.register(FieryCore);
     ModItem.register(WarriorsBracer);
@@ -79,6 +84,10 @@ function initializeAccessories() {
     ModItem.register(FeatherCrystal);
     ModItem.register(ManaEqualizer);
     ModItem.register(ShimmeringCloak);
+    ModItem.register(RunicScroll);
+    ModItem.register(ShamanicCharm);
+    ModItem.register(HallowTreasureMagnet);
+    ModItem.register(AbsorptionSphere);
 }
 
 function initializeArmors() {
@@ -92,6 +101,7 @@ function initializeMaterials() {
     ModItem.register(PearlOfPutrescence);
     ModItem.register(ElectrumBar);
     ModItem.register(GlitteringDust);
+    ModItem.register(ShimmeringSilk);
 }
 
 function initializeWeapons() {

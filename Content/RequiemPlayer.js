@@ -306,9 +306,6 @@ export class RequiemPlayer extends ModPlayer {
             if (this.player.statLife < this.player.statLifeMax2 / 10) {
                 this.player.lifeRegen += 2;
             }
-            if (this.player.poisoned || this.player.onFire || this.player.onFrostBurn) {
-                this.player.lifeRegen += 4;
-            }
         }
         
         if (RequiemPlayer.faerieRing && (Terraria.Main.eclipse || Terraria.Main.dayTime)) {

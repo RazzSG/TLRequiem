@@ -2,6 +2,11 @@
 import {RequiemGlobalItem} from "../../RequiemGlobalItem.js";
 
 export class VialOfGraveEarth extends ModItem {
+    constructor() {
+        super();
+        this.Texture = `Items/Accessories/${this.constructor.name}`;
+    }
+    
     SetDefaults() {
         this.Item.value = RequiemGlobalItem.Rarity1BuyPrice;
         this.Item.rare = 1;

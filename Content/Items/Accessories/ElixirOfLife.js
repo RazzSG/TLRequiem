@@ -2,6 +2,11 @@
 import {RequiemGlobalItem} from "../../RequiemGlobalItem.js";
 
 export class ElixirOfLife extends ModItem {
+    constructor() {
+        super();
+        this.Texture = `Items/Accessories/${this.constructor.name}`;
+    }
+    
     SetDefaults() {
         this.Item.rare = 11;
         this.Item.value = RequiemGlobalItem.Rarity11BuyPrice;

@@ -8,6 +8,8 @@ export class VialOfGraveEarth extends ModItem {
     }
     
     SetDefaults() {
+        this.Item.width = 34;
+        this.Item.height = 34;
         this.Item.value = RequiemGlobalItem.Rarity1BuyPrice;
         this.Item.rare = 1;
         this.Item.accessory = true;

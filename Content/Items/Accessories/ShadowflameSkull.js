@@ -9,6 +9,8 @@ export class ShadowflameSkull extends ModItem {
     }
     
     SetDefaults() {
+        this.Item.width = 40;
+        this.Item.height = 48;
         this.Item.value = RequiemGlobalItem.Rarity5BuyPrice;
         this.Item.rare = 5;
         this.Item.accessory = true;

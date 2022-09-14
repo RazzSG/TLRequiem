@@ -9,6 +9,8 @@ export class FeatherCrystal extends ModItem {
     }
     
     SetDefaults() {
+        this.Item.width = 66;
+        this.Item.height = 82;
         this.Item.accessory = true;
         this.Item.rare = 4;
         this.Item.value = RequiemGlobalItem.Rarity4BuyPrice;

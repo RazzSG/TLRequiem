@@ -8,6 +8,8 @@ export class ElixirOfLife extends ModItem {
     }
     
     SetDefaults() {
+        this.Item.width = 46;
+        this.Item.height = 46;
         this.Item.rare = 11;
         this.Item.value = RequiemGlobalItem.Rarity11BuyPrice;
         this.Item.accessory = true;

@@ -17,6 +17,7 @@ export const Terraria = {
     CombatText: new NativeClass('Terraria', 'CombatText'),
     Collision: new NativeClass('Terraria', 'Collision'),
     GUIPlayerCreateMenu: new NativeClass('', 'GUIPlayerCreateMenu'),
+    PlayerSpawnContext: new NativeClass('Terraria', 'PlayerSpawnContext'),
     ID: {
         NPCID: new NativeClass('Terraria.ID', 'NPCID'),
         SoundID: new NativeClass('Terraria.ID', 'SoundID'),
@@ -34,7 +35,8 @@ export const Terraria = {
     },
     Localization: {
         Language: new NativeClass('Terraria.Localization', 'Language'),
-        LocalizedText: new NativeClass('Terraria.Localization', 'LocalizedText')
+        LocalizedText: new NativeClass('Terraria.Localization', 'LocalizedText'),
+        GameCulture: new NativeClass('Terraria.Localization', 'GameCulture'),
     },
     UI: {
         ItemTooltip: new NativeClass("Terraria.UI", "ItemTooltip"),
@@ -73,6 +75,9 @@ export const Terraria = {
         Shaders: {
             GameShaders: new NativeClass('Terraria.Graphics.Shaders', 'GameShaders')
         }
+    },
+    IO: {
+        WorldFile: new NativeClass('Terraria.IO', 'WorldFile'),
     }
 }
 

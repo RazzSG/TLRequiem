@@ -104,3 +104,13 @@ export function rangedDamage(player) {
 export function minionDamage(player) {
     return 1 + RequiemPlayer.allDamage + player.minionDamage - 1;
 }
+
+export function killAllHostileProjectiles() {
+    for (let i = 0; i < Terraria.Main.maxProjectiles; i++) {
+        const projectile = Terraria.Main.projectile[i];
+
+        if (projectile.active && projectile.hostile && !projectile.friendly && projectile.damage > 0) {
+            projectile.Kill();
+        }
+    }
+}

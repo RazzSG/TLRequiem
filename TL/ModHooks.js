@@ -23,6 +23,7 @@ import { NPCLoader } from "./Loaders/NPCLoader.js";
 import {RequiemPlayer} from "../Content/RequiemPlayer.js";
 import {StellarPendant} from "../Content/Items/Accessories/StellarPendant.js";
 import {ProjectileLoader} from "./Loaders/ProjectileLoader.js";
+import {GauntletMode} from "../Content/Challenges/GauntletMode/GauntletMode.js";
 
 export class ModHooks {
 	static OnHitTemp = [];
@@ -2412,6 +2413,33 @@ export class ModHooks {
                 const itemIndex = Terraria.Item['int NewItem(int X, int Y, int Width, int Height, int Type, int Stack, bool noBroadcast, int pfix, bool noGrabDelay, bool reverseLookup)'](x, y, 0, 0, itemId, stack, false, -1, false, false);
                 Terraria.GameContent.ItemDropRules.CommonCode.ModifyItemDropFromNPC(npc, itemIndex);
             }
+        });
+        
+        Terraria.IO.WorldFile.InternalSaveWorld.hook((original, useCloudSaving, resetTime) => {
+            original(useCloudSaving, resetTime);
+            
+            GauntletMode.GauntletActive = false;
+            GauntletMode.Stage = 0;
+        });
+
+        Terraria.Player.UpdateBiomes.hook((original, self) => {
+            original(self);
+
+            if (GauntletMode.GauntletActive) {
+                if (GauntletMode.Stage === GauntletMode.Bosses.findIndex(boss => boss.id === 266) && !self.ZoneCrimson) {
+                    self.ZoneCrimson = true;
+                } else if (GauntletMode.Stage === GauntletMode.Bosses.findIndex(boss => boss.id === 13) && !self.ZoneCorrupt) {
+                    self.ZoneCorrupt = true;
+                }
+            }
+        });
+        
+        Terraria.NPC.UpdateNPC.hook((original, self, i) => {
+            if (GauntletMode.GauntletActive && !self.friendly && !self.townNPC) {
+                GauntletMode.ForceDespawnOtherNPCs(self);
+            }
+            
+            original(self, i); 
         });
 
         ModHooks.isInitialized = true;

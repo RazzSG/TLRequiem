@@ -4,6 +4,7 @@ import {DropHelper} from "../Common/DropHelper.js";
 import {Terraria} from "../TL/ModImports.js";
 import {RequiemPlayer} from "./RequiemPlayer.js";
 import * as Utils from "../Common/RequiemUtilities.js";
+import {GauntletMode} from "./Challenges/GauntletMode/GauntletMode.js";
 
 export class RequiemGlobalNPC extends GlobalNPC {
     NPCLoot(npc) {
@@ -251,5 +252,13 @@ export class RequiemGlobalNPC extends GlobalNPC {
                 nextSlot++;
             }
         }
+    }
+    
+    PreKill(npc) {
+        if (GauntletMode.GauntletActive) {
+            GauntletMode.OnBossKill(npc);
+            return false;
+        }
+        return true;
     }
 }

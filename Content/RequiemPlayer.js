@@ -2,6 +2,7 @@
 import * as Utils from "../Common/RequiemUtilities.js";
 import {Microsoft, System, Terraria} from "../TL/ModImports.js";
 import {ModLocalization} from "../TL/ModLocalization.js";
+import {GauntletMode} from "./Challenges/GauntletMode/GauntletMode.js";
 
 export class RequiemPlayer extends ModPlayer {
     static blessedRelic;
@@ -83,6 +84,16 @@ export class RequiemPlayer extends ModPlayer {
         RequiemPlayer.runicScroll = false;
         RequiemPlayer.shamanicCharm = false;
         RequiemPlayer.dotResist = 0;
+    }
+    
+    UpdateDead() {
+        if (GauntletMode.GauntletActive) {
+            GauntletMode.EndEffects();
+        }
+    }
+    
+    PostUpdate() {
+        GauntletMode.Update();
     }
 
     PostUpdateEquips() {

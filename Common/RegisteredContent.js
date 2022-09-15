@@ -47,6 +47,7 @@ import {RunicScroll} from "../Content/Items/Accessories/RunicScroll.js";
 import {ShamanicCharm} from "../Content/Items/Accessories/ShamanicCharm.js";
 import {HallowTreasureMagnet} from "../Content/Items/Accessories/HallowTreasureMagnet.js";
 import {AbsorptionSphere} from "../Content/Items/Accessories/AbsorptionSphere.js";
+import {TyransLegacy} from "../Content/Items/Tools/TyransLegacy.js";
 
 export function initializeContent() {
     ModPlayer.register(RequiemPlayer);
@@ -114,4 +115,5 @@ function initializeTools() {
     ModItem.register(StatSheet);
     ModItem.register(SandstormGenerator);
     ModItem.register(PocketRainCloud);
+    ModItem.register(TyransLegacy);
 }

@@ -10,7 +10,7 @@ export class RequiemPlayer extends ModPlayer {
     static shadowflameMinion;
     static oilMinion;
     static areThereAnyBosses = false;
-    static statSheet = false;
+    static StatSheet = false;
     static defianceBanner;
     static defianceBannerBonus;
     static icyHeart;

@@ -12,7 +12,7 @@ export class StatSheet extends ModItem {
     }
     
     UseItem(player) {
-        RequiemPlayer.statSheet = !RequiemPlayer.statSheet;
+        RequiemPlayer.StatSheet = !RequiemPlayer.StatSheet;
         return true;
     }
 }

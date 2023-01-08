@@ -1,6 +1,6 @@
 ﻿import {ModLocalization} from "./TL/ModLocalization.js";
 import {initializeContent} from "./Common/RegisteredContent.js";
-import {debugPlayerInfo} from "./Content/DebugPlayerInfo.js";
+import {StatSheetUI} from "./Content/StatSheetUI.js";
 import {GauntletMode} from "./Content/Challenges/GauntletMode/GauntletMode.js";
 
 ModLocalization.register({
@@ -9,4 +9,4 @@ ModLocalization.register({
 
 GauntletMode.Load();
 initializeContent();
-debugPlayerInfo();
+new StatSheetUI().Initialize();
